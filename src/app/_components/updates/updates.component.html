@@ -1,0 +1,25 @@
+<ng-container *ngIf="{ isEditing: functions.isEditing() } as editing">
+  <div class="container">
+    <mat-card class="updates" [style.padding-top]="editing.isEditing ? '0' : '16px'">
+      <div *ngIf="editing.isEditing" class="flex-container-centered-row" style="height: 100px;">
+        <a mat-raised-button color="primary" [routerLink]="['update', undefined]">Dodaj post</a>
+      </div>
+      <mat-card class="update" *ngFor="let update of updates | async; first as isFirst, last as isLast"
+                [ngClass]="{'card-top' : !isFirst, 'card-bottom' : !isLast}">
+        <mat-card-header class="update-header" [routerLink]="['update', update.id]">
+          <img mat-card-avatar src="{{teacher.pictureUrl}}" alt="">
+          <mat-card-title>{{update.title}}</mat-card-title>
+          <mat-card-subtitle>{{update.subtitle}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p style="margin-top: 20px;">{{update.date | date:'fullDate'}}</p>
+        </mat-card-content>
+        <mat-card-actions *ngIf="editing.isEditing">
+          <a mat-raised-button color="primary" [routerLink]="['update', update.id]" style="margin-right: 10px;">Edytuj</a>
+          <button mat-raised-button color="primary" (click)="deleteUpdate(update)">Usuń</button>
+        </mat-card-actions>
+      </mat-card>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]"></mat-paginator>
+    </mat-card>
+  </div>
+</ng-container>

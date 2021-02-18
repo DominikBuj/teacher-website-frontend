@@ -1,0 +1,16 @@
+<div *ngIf="functions.isEditing(); else notEditing">
+  <app-profile-edit [teacher]="teacher"></app-profile-edit>
+</div>
+<ng-template #notEditing>
+  <div class="container">
+    <div class="info">
+      <h1>{{teacher.firstName}} {{teacher.lastName}}</h1>
+      <h2>{{teacher.university}}</h2>
+      <h2>{{teacher.subject}}</h2>
+      <p>{{teacher.about}}</p>
+    </div>
+    <div class="picture flex-container-centered-column">
+      <img [src]="teacher.pictureUrl" width="600" height="600" alt="">
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,17 @@
+.container {
+  width: 100%;
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: auto 1520px auto;
+  grid-template-rows: 100%;
+  grid-template-areas:
+  ". publications .";
+
+  .publications {
+    grid-area: publications;
+
+    .publication {
+      border: 1px solid black;
+    }
+  }
+}

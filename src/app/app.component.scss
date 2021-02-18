@@ -1,0 +1,34 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 64px auto 25px;
+  grid-template-areas:
+  "header"
+  "content"
+  "footer";
+}
+
+.header {
+  width: inherit;
+  grid-area: header;
+  position: fixed;
+  z-index: 1;
+
+  h1 {
+    margin: 0 30px;
+
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+.content {
+  grid-area: content;
+}
+
+.footer {
+  grid-area: footer;
+}

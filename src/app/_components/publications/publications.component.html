@@ -1,0 +1,37 @@
+<ng-container *ngIf="{ isEditing: functions.isEditing() } as settings">
+  <div class="container">
+    <mat-card class="publications" [style.padding-top]="settings.isEditing ? '0' : '16px'">
+      <div *ngIf="settings.isEditing" class="editing-buttons">
+        <a mat-raised-button color="primary" (click)="switchOrcidAuthorization()" [href]="orcidAuthorizationUrl">Importuj publikacje z ORCID</a>
+        <button mat-raised-button color="primary" (click)="addPublication()">Dodaj</button>
+      </div>
+      <mat-card class="publication" *ngFor="let publication of publications | async; first as isFirst, last as isLast"
+                [ngClass]="{'card-top' : !isFirst, 'card-bottom' : !isLast}">
+        <mat-card-header>
+          <mat-card-title>{{publication.title}}</mat-card-title>
+          <mat-card-subtitle>{{publication.subtitle}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="publication.publisher || publication.type" class="flex-container-centered-row">
+            <p *ngIf="publication.publisher" style="margin-right: 20px;">Wydawca: {{publication.publisher}}</p>
+            <p *ngIf="publication.type">Rodzaj: {{publication.type}}</p>
+            <span class="auto-spacer"></span>
+          </div>
+          <div *ngIf="publication.link" class="flex-container-centered-row">
+            <p style="margin: 0;">Link: </p>
+            <a mat-button [href]="publication.link" target="_blank">{{publication.link}}</a>
+            <span class="auto-spacer"></span>
+          </div>
+          <p *ngIf="publication.date" style="margin-top: 10px;">{{publication.date | date:'fullDate'}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <ng-container *ngIf="settings.isEditing">
+            <button mat-raised-button color="primary" (click)="deletePublication(publication)" style="margin-right: 10px;">Usuń</button>
+            <button mat-raised-button color="primary" (click)="updatePublication(publication)">Edytuj</button>
+          </ng-container>
+        </mat-card-actions>
+      </mat-card>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </mat-card>
+  </div>
+</ng-container>

@@ -1,0 +1,43 @@
+.container {
+  width: 100%;
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: auto 1520px auto;
+  grid-template-rows: 100%;
+  grid-template-areas:
+  ". contact .";
+
+  .contact {
+    grid-area: contact;
+  }
+}
+
+h3, p {
+  margin: 0;
+}
+
+h3 {
+  margin-right: 10px;
+}
+
+iframe {
+  width: 1000px;
+  height: 600px;
+  border: 1px solid black;
+}
+
+.information {
+  margin: 10px 0;
+}
+
+.element {
+  margin: 10px 0;
+}
+
+.medium-input {
+  width: 500px;
+}
+
+.big-input {
+  width: 1000px;
+}

@@ -1,0 +1,38 @@
+<div class="container">
+  <mat-card class="contact">
+    <form *ngIf="functions.isEditing(); else notEditing" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit()" novalidate>
+      <div class="editing-buttons">
+        <button mat-raised-button color="primary" type="submit" >Zapisz zmiany</button>
+      </div>
+      <div class="flex-container-centered-column">
+        <mat-form-field class="element medium-input" appearance="fill">
+          <mat-label>Adres Email</mat-label>
+          <input type="email" matInput name="emailAddress" #emailAddress="ngModel" [(ngModel)]="form.emailAddress">
+        </mat-form-field>
+        <mat-form-field class="element medium-input" appearance="fill">
+          <mat-label>Telefon</mat-label>
+          <span matPrefix>+48 &nbsp;</span>
+          <input type="tel" matInput name="phoneNumber" #phoneNumber="ngModel" [(ngModel)]="form.phoneNumber" maxlength="9">
+        </mat-form-field>
+        <iframe class="element" [hidden]="!calendarUrlSafe" [src]="calendarUrlSafe"></iframe>
+        <mat-form-field class="element big-input" appearance="fill">
+          <mat-label>Kalendarz Url</mat-label>
+          <input type="text" matInput name="calendarUrl" #calendarUrl="ngModel" [(ngModel)]="form.calendarUrl">
+        </mat-form-field>
+      </div>
+    </form>
+    <ng-template #notEditing>
+      <div class="flex-container-centered-column">
+        <div class="information flex-container-centered-row" *ngIf="teacher.emailAddress">
+          <h3>Adres Email:</h3>
+          <p>{{teacher.emailAddress}}</p>
+        </div>
+        <div class="information flex-container-centered-row" *ngIf="teacher.phoneNumber">
+          <h3>Telefon:</h3>
+          <p>+48 {{teacher.phoneNumber}}</p>
+        </div>
+        <iframe *ngIf="calendarUrlSafe" [src]="calendarUrlSafe" style="margin: 20px;"></iframe>
+      </div>
+    </ng-template>
+  </mat-card>
+</div>
