@@ -1,0 +1,172 @@
+@import '~@angular/material/theming';
+
+/*$primary: mat-palette($mat-red, 100);
+$accent: mat-palette($mat-light-green, 600);
+$warn: mat-palette($mat-red);*/
+$primary: mat-palette($mat-light-blue, 50);
+$accent: mat-palette($mat-deep-orange, 200);
+/*$accent: mat-palette($mat-cyan, A700);*/
+$warn: mat-palette($mat-red, A200);
+
+/*$primary-dark: mat-palette($mat-grey, 900);
+$accent-dark: mat-palette($mat-amber, 600);
+$warn-dark: mat-palette($mat-red);*/
+$primary-dark: mat-palette($mat-grey, 900);
+$accent-dark: mat-palette($mat-amber, 600);
+$warn-dark: mat-palette($mat-red, A700);
+
+$light-theme: mat-light-theme((
+  color: (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn
+  )
+));
+$foreground: map-get($light-theme, foreground);
+$background: map-get($light-theme, background);
+
+$dark-theme: mat-dark-theme((
+  color: (
+    primary: $primary-dark,
+    accent: $accent-dark,
+    warn: $warn-dark
+  )
+));
+$foreground-dark: map-get($dark-theme, foreground);
+$background-dark: map-get($dark-theme, background);
+
+
+.card-background-color-light { background-color: mat-color($background, card); }
+
+.card-background-color-dark { background-color: mat-color($background-dark, card); }
+
+.primary-background-color-light { background-color: mat-color($primary, 0.5); }
+
+.primary-background-color-dark { background-color: mat-color($primary-dark, 0.5); }
+
+.border-color-light { border-color: mat-color($mat-gray, 900, 0.25); }
+
+.border-color-dark { border-color: mat-color($mat-gray, 50, 0.25); }
+
+.border-light { border: 1px solid mat-color($mat-gray, 900, 0.25); }
+
+.border-dark { border: 1px solid mat-color($mat-gray, 50, 0.25); }
+
+.flex-column-centered-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-row-centered-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden-overflow {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.auto-spacer { flex: 1 1 auto; }
+
+.auto-spacer-small { flex: 0.05 1 auto; }
+
+.fill {
+  width: 100%;
+  height: 100%;
+}
+
+.large-input {
+  width: 100%;
+  padding-bottom: 0.15em;
+}
+
+.medium-input {
+  width: calc((100% - 1.5em) / 2);
+  padding-bottom: 0.15em;
+}
+
+.small-input {
+  width: calc((100% - 3em) / 3);
+  padding-bottom: 0.15em;
+}
+
+.table-filter {
+  padding: 0;
+  margin: 0;
+
+  ::ng-deep.mat-form-field-wrapper {
+    padding: 0;
+    margin: 16px 0 0 0;
+  }
+}
+
+.table-header-row {
+  @extend .primary-background-color-light;
+
+  th {
+    @extend .border-color-light;
+  }
+
+  &-dark {
+    @extend .primary-background-color-dark;
+
+    th {
+      @extend .border-color-dark;
+    }
+  }
+}
+
+.entry-card {
+  margin: 32px 0 0 0;
+  padding: 0 !important;
+  width: calc(100% - 2px);
+  border: 1px solid mat-color($mat-gray, 900, 0.25);
+  border-top: 6px solid mat-color($accent, 0.75);
+
+  mat-card-header {
+    margin: 0;
+    padding: 16px 16px 0 16px;
+
+    ::ng-deep .mat-card-header-text {
+      margin: 0;
+    }
+
+    mat-card-title, mat-card-subtitle {
+      margin: 0;
+      padding: 0;
+      line-height: 1em;
+      transform: translateY(-4px);
+    }
+
+    mat-card-title {
+      font-weight: 700;
+      font-size: 24px;
+    }
+
+    mat-card-subtitle {
+      margin: 0.25em 0 0 0;
+      font-weight: 500;
+      font-size: 16px;
+    }
+  }
+
+  mat-card-content {
+    @extend .flex-column-centered-container;
+    align-items: flex-start;
+    justify-items: flex-start;
+    padding: 0 16px 16px 16px;
+    margin: 0;
+  }
+
+  &-dark {
+    border: 1px solid mat-color($primary-dark, 0.25);
+    border-top: 6px solid mat-color($accent-dark, 0.75);
+  }
+}

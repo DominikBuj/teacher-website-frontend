@@ -1,0 +1,32 @@
+<mat-grid-list [cols]="isLimited ? 3 : global.isScreenSmall || global.isScreenMedium ? 3 : 6" rowHeight="64px"
+               class="links-panel" [ngClass]="{'links-panel-dark': global.isDarkMode}">
+  <mat-grid-tile>
+    <h1 class="links-panel-header">Linki</h1>
+  </mat-grid-tile>
+  <mat-grid-tile *ngFor="let column of getLinksListColumnsArray()"></mat-grid-tile>
+  <mat-grid-tile *ngFor="let link of links" [ngClass]="{'editable-link': global.canEdit()}" rowspan="2">
+    <a [href]="link.url" target="_blank" [ngStyle]="{'background-color': link.color}"
+       [ngClass]="!!link.iconUrl ? 'link-with-image' : 'link mat-raised-button'">
+      <img *ngIf="!!link.iconUrl; else noIcon" [src]="link.iconUrl" alt="icon">
+      <ng-template #noIcon><span class="hidden-overflow">{{link.name}}</span></ng-template>
+    </a>
+    <div class="link-edit-panel" [ngClass]="{'link-edit-panel-dark': global.isDarkMode}">
+      <button mat-mini-fab color="accent" type="button" (click)="replaceLink(link)"
+              style="margin: 8px 4px 8px 8px;" matTooltip="Edytuj">
+        <mat-icon>{{global.operations.Edit}}</mat-icon>
+      </button>
+      <button mat-mini-fab color="accent" type="button" (click)="deleteLink(link)"
+              style="margin: 8px 8px 8px 4px;" matTooltip="Usuń">
+        <mat-icon>{{global.operations.Delete}}</mat-icon>
+      </button>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile *ngIf="global.canEdit() && (!isLimited || availableLinkTypes.length !== 0)" rowspan="2">
+    <button mat-raised-button color="accent" type="button" (click)="addLink()" class="button"
+            [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+            [matTooltip]="global.isScreenSmall ? 'Dodaj' : null">
+      <mat-icon>{{global.operations.Add}}</mat-icon>
+      <span class="button-text">Dodaj</span>
+    </button>
+  </mat-grid-tile>
+</mat-grid-list>

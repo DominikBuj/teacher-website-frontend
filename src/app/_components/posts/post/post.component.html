@@ -1,0 +1,125 @@
+<div class="post-container" [ngClass]="{'post-container-phone': global.isScreenSmall}">
+  <div class="post" [ngClass]="{'post-dark': global.isDarkMode, 'post-phone': global.isScreenSmall,
+       'post-tablet': global.isScreenLarge || global.isScreenMedium}">
+    <div class="post-inner-container">
+      <form *ngIf="global.canEdit(); else notEditing" class="post-inner" autocomplete="off" [formGroup]="postForm"
+            (ngSubmit)="onSubmit()">
+        <div class="edit-buttons-container" [ngClass]="{'edit-buttons-container-dark': global.isDarkMode}">
+          <span class="auto-spacer"></span>
+          <a mat-raised-button routerLink="posts" color="accent" class="button"
+             [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+             [matTooltip]="global.isScreenSmall ? 'Cofnij' : null">
+            <mat-icon>{{global.operations.GoBack}}</mat-icon>
+            <span class="button-text">Cofnij</span>
+          </a>
+          <span class="auto-spacer"></span>
+          <button mat-raised-button color="accent" type="submit" class="button"
+                  [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+                  [matTooltip]="global.isScreenSmall ? operation === global.operations.Add ? 'Dodaj' : 'Zapisz' : null">
+            <mat-icon>{{operation}}</mat-icon>
+            <span *ngIf="operation === global.operations.Add; else save" class="button-text">Dodaj</span>
+            <ng-template #save><span class="button-text">Zapisz</span></ng-template>
+          </button>
+          <span class="auto-spacer"></span>
+          <ng-container *ngIf="operation === global.operations.Save">
+            <button mat-raised-button color="accent" (click)="deletePost(post)" class="button"
+                    [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+                    [matTooltip]="global.isScreenSmall ? 'Usuń' : null">
+              <mat-icon>{{global.operations.Delete}}</mat-icon>
+              <span class="button-text">Usuń</span>
+            </button>
+            <span class="auto-spacer"></span>
+          </ng-container>
+        </div>
+        <div class="post-edit-container">
+          <mat-form-field appearance="fill" color="accent">
+            <mat-label>Tytuł</mat-label>
+            <input #title type="text" matInput formControlName="title" required>
+            <mat-hint align="end">{{title.value.length}} / 200</mat-hint>
+            <mat-error *ngIf="functions.checkError(postForm, 'title', 'required')">
+              Tytuł jest <strong>wymagany</strong>
+            </mat-error>
+            <mat-error *ngIf="functions.checkError(postForm, 'title', 'maxlength')">
+              Tytuł może maksymalnie mieć długość <strong>200</strong> znaków
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="fill" color="accent">
+            <mat-label>Podtytuł</mat-label>
+            <input #subtitle type="text" matInput formControlName="subtitle">
+            <mat-hint align="end">{{subtitle.value.length}} / 200</mat-hint>
+            <mat-error *ngIf="functions.checkError(postForm, 'subtitle', 'maxlength')">
+              Podtytuł może maksymalnie mieć długość <strong>200</strong> znaków
+            </mat-error>
+          </mat-form-field>
+          <div class="ckeditor-container">
+            <ckeditor [editor]="ckEditor" formControlName="content"></ckeditor>
+          </div>
+        </div>
+      </form>
+      <ng-template #notEditing>
+        <div class="post-inner">
+          <div class="post-header-container" [ngClass]="{'post-header-container-dark': global.isDarkMode}">
+            <div class="post-header-inner-container">
+              <h1 class="post-title">{{post.title}}</h1>
+              <h2 class="post-subtitle">{{post.subtitle}}</h2>
+            </div>
+            <button mat-icon-button color="accent" routerLink="posts" matTooltip="Cofnij" class="back-button">
+              <mat-icon>{{global.operations.GoBack}}</mat-icon>
+            </button>
+          </div>
+          <div class="divider" [ngClass]="{'divider-dark': global.isDarkMode}">
+            <div class="divider-top"></div>
+            <div class="divider-bottom"></div>
+          </div>
+          <div class="post-content-container">
+            <div class="post-content" [innerHTML]="post.content"></div>
+            <span class="auto-spacer"></span>
+            <span class="post-date">{{post.date | date: 'fullDate'}}</span>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+    <div class="files-list-container" [ngClass]="{'files-list-container-dark': global.isDarkMode}">
+      <mat-grid-list [cols]="global.isScreenSmall || global.isScreenMedium ? 2 : 4" rowHeight="64px">
+        <mat-grid-tile>
+          <h1 class="files-list-header">Załączone Pliki</h1>
+        </mat-grid-tile>
+        <mat-grid-tile *ngFor="let column of getFilesListColumnsArray()"></mat-grid-tile>
+        <mat-grid-tile *ngFor="let temporaryFile of temporaryFiles" [ngClass]="{'editable-file': global.canEdit()}">
+          <span class="file-name">{{temporaryFile.name}}</span>
+          <div class="file-edit-panel" [ngClass]="{'file-edit-panel-dark': global.isDarkMode}">
+            <button mat-mini-fab color="accent" type="button" (click)="replaceTemporaryFile(temporaryFile)"
+                    style="margin: 8px 4px 8px 8px;" matTooltip="Edytuj">
+              <mat-icon>{{global.operations.Edit}}</mat-icon>
+            </button>
+            <button mat-mini-fab color="accent" type="button" (click)="deleteTemporaryFile(temporaryFile)"
+                    style="margin: 8px 8px 8px 4px;" matTooltip="Usuń">
+              <mat-icon>{{global.operations.Delete}}</mat-icon>
+            </button>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile *ngFor="let savedFile of post.files" [ngClass]="{'editable-file': global.canEdit()}">
+          <a mat-button color="accent" class="file-name" target="_blank" [href]="savedFile.url">{{savedFile.name}}</a>
+          <div class="file-edit-panel" [ngClass]="{'file-edit-panel-dark': global.isDarkMode}">
+            <button mat-mini-fab color="accent" type="button" (click)="replaceSavedFile(savedFile)"
+                    style="margin: 8px 4px 8px 8px;" matTooltip="Edytuj">
+              <mat-icon>{{global.operations.Edit}}</mat-icon>
+            </button>
+            <button mat-mini-fab color="accent" type="button" (click)="deleteSavedFile(savedFile)"
+                    style="margin: 8px 8px 8px 4px;" matTooltip="Usuń">
+              <mat-icon>{{global.operations.Delete}}</mat-icon>
+            </button>
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile *ngIf="global.canEdit()">
+          <button mat-raised-button color="accent" type="button" (click)="addFile()" class="button"
+                  [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+                  [matTooltip]="global.isScreenSmall ? 'Dodaj' : null">
+            <mat-icon>{{global.operations.Add}}</mat-icon>
+            <span class="button-text">Dodaj</span>
+          </button>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+  </div>
+</div>

@@ -1,38 +1,86 @@
-<div class="container">
-  <mat-card class="contact">
-    <form *ngIf="functions.isEditing(); else notEditing" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit()" novalidate>
-      <div class="editing-buttons">
-        <button mat-raised-button color="primary" type="submit" >Zapisz zmiany</button>
+<div class="component-container" [ngClass]="{'component-container-laptop': global.isScreenLarge,
+     'component-container-tablet': global.isScreenMedium, 'component-container-phone': global.isScreenSmall}">
+  <div *ngIf="!global.isScreenSmall" class="component-header"
+       [ngClass]="{'component-header-tablet': !global.isScreenVeryLarge}">
+    <span>Kontakt</span>
+  </div>
+  <div class="component-content-container contact-container"
+       [ngClass]="{'component-content-container-dark': global.isDarkMode,
+       'component-content-container-tablet': global.isScreenMedium,
+       'component-content-container-phone': global.isScreenSmall,
+       'contact-container-phone': global.isScreenMedium || global.isScreenSmall}">
+    <form *ngIf="global.canEdit(); else notEditing" autocomplete="off" [formGroup]="teacherContactForm"
+          (ngSubmit)="onSubmit()" class="contact-info-container"
+          [ngClass]="{'contact-info-container-dark': global.isDarkMode}">
+      <div class="edit-buttons-container" [ngClass]="{'edit-buttons-container-dark': global.isDarkMode}">
+        <button mat-raised-button color="accent" type="submit" class="button"
+                [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+                [matTooltip]="global.isScreenSmall ? 'Zapisz' : null">
+          <mat-icon>{{global.operations.Save}}</mat-icon>
+          <span class="button-text">Zapisz</span>
+        </button>
       </div>
-      <div class="flex-container-centered-column">
-        <mat-form-field class="element medium-input" appearance="fill">
+      <div class="contact-info-middle-container" style="ma"
+           [ngClass]="{'contact-info-middle-container-phone': global.isScreenMedium || global.isScreenSmall}">
+        <mat-form-field appearance="fill" color="accent">
           <mat-label>Adres Email</mat-label>
-          <input type="email" matInput name="emailAddress" #emailAddress="ngModel" [(ngModel)]="form.emailAddress">
+          <input #emailAddress matInput type="email" formControlName="emailAddress">
+          <mat-hint align="end">{{emailAddress.value.length}} / 400</mat-hint>
+          <mat-error *ngIf="functions.checkError(teacherContactForm, 'emailAddress', 'maxlength')">
+            Adres email może maksymalnie mieć długość <strong>400</strong> znaków
+          </mat-error>
+          <mat-error *ngIf="functions.checkError(teacherContactForm, 'emailAddress', 'email')">
+            Adres email musi być <strong>poprawny</strong>
+          </mat-error>
         </mat-form-field>
-        <mat-form-field class="element medium-input" appearance="fill">
+        <mat-form-field appearance="fill" color="accent">
           <mat-label>Telefon</mat-label>
           <span matPrefix>+48 &nbsp;</span>
-          <input type="tel" matInput name="phoneNumber" #phoneNumber="ngModel" [(ngModel)]="form.phoneNumber" maxlength="9">
-        </mat-form-field>
-        <iframe class="element" [hidden]="!calendarUrlSafe" [src]="calendarUrlSafe"></iframe>
-        <mat-form-field class="element big-input" appearance="fill">
-          <mat-label>Kalendarz Url</mat-label>
-          <input type="text" matInput name="calendarUrl" #calendarUrl="ngModel" [(ngModel)]="form.calendarUrl">
+          <input #phoneNumber matInput type="tel" formControlName="phoneNumber">
+          <mat-hint align="end">{{phoneNumber.value.length}} / 16</mat-hint>
+          <mat-error *ngIf="functions.checkError(teacherContactForm, 'phoneNumber', 'maxlength')">
+            Number telefonu może maksymalnie mieć długość <strong>16</strong> cyfr
+          </mat-error>
         </mat-form-field>
       </div>
     </form>
     <ng-template #notEditing>
-      <div class="flex-container-centered-column">
-        <div class="information flex-container-centered-row" *ngIf="teacher.emailAddress">
-          <h3>Adres Email:</h3>
-          <p>{{teacher.emailAddress}}</p>
+      <div *ngIf="!!teacher?.emailAddress || !!teacher?.phoneNumber" class="contact-info-container"
+           [ngClass]="{'contact-info-container-dark': global.isDarkMode}">
+        <div class="contact-info-middle-container"
+             [ngClass]="{'contact-info-middle-container-phone': global.isScreenMedium || global.isScreenSmall}">
+          <div class="contact-info-entry-container">
+            <span class="contact-info-entry-label">Adres Email</span>
+            <span class="contact-info-entry">{{teacher?.emailAddress}}</span>
+          </div>
+          <div class="contact-info-entry-container">
+            <span class="contact-info-entry-label">Numer Telefonu</span>
+            <span class="contact-info-entry">{{teacher?.phoneNumber}}</span>
+          </div>
         </div>
-        <div class="information flex-container-centered-row" *ngIf="teacher.phoneNumber">
-          <h3>Telefon:</h3>
-          <p>+48 {{teacher.phoneNumber}}</p>
-        </div>
-        <iframe *ngIf="calendarUrlSafe" [src]="calendarUrlSafe" style="margin: 20px;"></iframe>
       </div>
     </ng-template>
-  </mat-card>
+    <div class="calendar-container" *ngIf="calendarExists || global.canEdit()"
+         [ngClass]="{'calendar-container-editable': calendarExists && global.canEdit(),
+         'calendar-container-dark': global.isDarkMode, 'calendar-container-tablet': global.isScreenMedium,
+         'calendar-container-phone': global.isScreenSmall}">
+      <iframe [src]="calendarUrlSafe"></iframe>
+      <button mat-raised-button *ngIf="global.canEdit()" color="accent" (click)="openCalendarEditDialog()"
+              class="button" [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+              [matTooltip]="global.isScreenSmall ? calendarExists ? 'Edytuj' : 'Dodaj kalendarz' : null">
+        <ng-container *ngIf="calendarExists; else noCalendar">
+          <mat-icon>{{global.operations.Edit}}</mat-icon>
+          <span class="button-text">Edytuj</span>
+        </ng-container>
+        <ng-template #noCalendar>
+          <ng-container>
+            <mat-icon>{{global.operations.Add}}</mat-icon>
+            <span class="button-text">Dodaj kalendarz</span>
+          </ng-container>
+        </ng-template>
+      </button>
+    </div>
+    <app-links-panel *ngIf="linksPanelExists || global.canEdit()" class="links-panel"
+                     [isLimited]="false"></app-links-panel>
+  </div>
 </div>

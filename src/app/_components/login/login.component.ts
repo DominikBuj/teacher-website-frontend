@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthService} from '../../_services/auth.service';
-import {LoginForm} from '../../_models/login-form.model';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -9,27 +10,40 @@ import {LoginForm} from '../../_models/login-form.model';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  loginForm: LoginForm;
+  loginForm: FormGroup = null;
   hidePassword = true;
+  submitted = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private snackBar: MatSnackBar,
+    private formBuilder: FormBuilder,
     private authService: AuthService
   ) {
-    this.loginForm = new LoginForm(undefined, undefined);
   }
 
   ngOnInit(): void {
-    const user = this.authService.user.value;
-    if (user) {
-      console.log(`already logged in as ${user.username}`);
+    const currentUser = this.authService.user.value;
+    if (!!currentUser) {
+      this.snackBar.open(`Już zalogowano jako ${currentUser.username}`, 'Zamknij', {duration: 2000});
       this.router.navigateByUrl('');
     }
+
+    this.loginForm = this.formBuilder.group({
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]]
+    });
   }
 
   onSubmit(): void {
-    this.authService.login(this.loginForm).subscribe(_ => {
+    this.submitted = true;
+
+    if (this.loginForm.invalid) {
+      return;
+    }
+
+    this.authService.login(this.loginForm.getRawValue()).subscribe(() => {
       const returnUrl = this.route.snapshot.queryParams.returnUrl || '';
       this.router.navigateByUrl(returnUrl);
     });

@@ -1,0 +1,110 @@
+<div class="component-container" [ngClass]="{'component-container-laptop': global.isScreenLarge,
+     'component-container-tablet': global.isScreenMedium, 'component-container-phone': global.isScreenSmall}">
+  <div *ngIf="!global.isScreenSmall" class="component-header"
+       [ngClass]="{'component-header-tablet': !global.isScreenVeryLarge}">
+    <span>Prace Dyplomowe</span>
+  </div>
+  <div class="component-content-container" [ngClass]="{'component-content-container-dark': global.isDarkMode,
+       'component-content-container-tablet': global.isScreenMedium, 'component-content-container-phone': global.isScreenSmall}">
+    <mat-tab-group dynamicHeight color="accent" class="dissertations-tab-group"
+                   [ngClass]="{'dissertations-tab-group-dark': global.isDarkMode}">
+      <mat-tab *ngFor="let dissertationStatus of global.dissertationStatuses | enumValues"
+               [label]="global.dissertationStatusLabels.get(dissertationStatus)">
+        <div @easeInOutVerticalEditingContainer *ngIf="global.canEdit()" class="edit-buttons-container"
+             (@easeInOutVerticalEditingContainer.done)="global.areAnimationsDisabled = true; changeDetectorRef.detectChanges();"
+             [ngClass]="{'edit-buttons-container-dark': global.isDarkMode}">
+          <button @easeInOutEditingButton mat-raised-button color="accent" class="button"
+                  (click)="addDissertation(global.dissertationStatuses[dissertationStatus])"
+                  [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+                  [matTooltip]="global.isScreenSmall ? 'Dodaj' : null">
+            <mat-icon>{{global.operations.Add}}</mat-icon>
+            <span class="button-text">Dodaj</span>
+          </button>
+        </div>
+        <table mat-table matSort multiTemplateDataRows class="dissertations-table"
+               [dataSource]="dissertationsDataSources.get(dissertationStatus)">
+          <ng-container matColumnDef="filter">
+            <th mat-header-cell class="dissertations-filter-cell" [colSpan]="getColumnsLength(dissertationStatus)"
+                *matHeaderCellDef>
+              <mat-form-field color="accent" appearance="outline" class="table-filter">
+                <mat-label>Szukaj</mat-label>
+                <input matInput (keyup)="applyFilter($event, dissertationStatus)">
+              </mat-form-field>
+            </th>
+          </ng-container>
+
+          <ng-container matColumnDef="topic">
+            <th mat-header-cell mat-sort-header
+                [colSpan]="!isDissertationCompleted(dissertationStatus) && global.canEdit() ? 2 : 1"
+                *matHeaderCellDef>Temat
+            </th>
+            <td mat-cell (mouseenter)="highlightedDissertation = element" (mouseleave)="highlightedDissertation = null"
+                (click)="assignExpandedDissertation(element)" *matCellDef="let element">
+              <span class="information-cell">{{element.topic}}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="date">
+            <th mat-header-cell mat-sort-header
+                [colSpan]="isDissertationCompleted(dissertationStatus) && global.canEdit() ? 2 : 1"
+                *matHeaderCellDef>Data
+            </th>
+            <td mat-cell (mouseenter)="highlightedDissertation = element" (mouseleave)="highlightedDissertation = null"
+                (click)="assignExpandedDissertation(element)" *matCellDef="let element">
+              <span class="information-cell">{{element.date | date: 'fullDate'}}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actionButtons">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+              <div class="action-buttons-cell">
+                <span class="auto-spacer"></span>
+                <button mat-mini-fab color="accent" matTooltip="Edytuj"
+                        (click)="replaceDissertation(element)" style="margin: 0 4px 0 8px;">
+                  <mat-icon>{{global.operations.Edit}}</mat-icon>
+                </button>
+                <span class="auto-spacer"></span>
+                <button mat-mini-fab color="accent" matTooltip="Usuń"
+                        (click)="deleteDissertation(element)" style="margin: 0 8px 0 4px;">
+                  <mat-icon>{{global.operations.Delete}}</mat-icon>
+                </button>
+                <span class="auto-spacer"></span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="expandedDissertation">
+            <td mat-cell [colSpan]="getColumnsLength(dissertationStatus)" *matCellDef="let element">
+              <span (@expandCollapseDissertationDescription.done)="global.areAnimationsDisabled = true; changeDetectorRef.detectChanges();"
+                    [@expandCollapseDissertationDescription]="element === expandedDissertation ? 'expanded' : 'collapsed'"
+                    class="description-cell">{{element.description}}</span>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="['filter']"></tr>
+          <tr mat-header-row *matHeaderRowDef="columns.get(dissertationStatus)" class="row"
+              [ngClass]="{'row-with-date': isDissertationCompleted(dissertationStatus),
+              'row-with-action-buttons': global.canEdit()}"></tr>
+          <tr mat-row *matRowDef="let row; columns: getColumns(dissertationStatus)" class="row row-without-border"
+              [ngClass]="{'row-with-date': isDissertationCompleted(dissertationStatus),
+              'row-with-action-buttons': global.canEdit(),
+              'highlighted-row': isDissertationHighlighted(row) && !global.isDarkMode,
+              'highlighted-row-dark': isDissertationHighlighted(row) && global.isDarkMode}"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['expandedDissertation']" class="expandable-row"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" *ngIf="filterValues.get(dissertationStatus).length !== 0"
+                [colSpan]="getColumnsLength(dissertationStatus)">
+              <span>Nie znaleziono "{{filterValues.get(dissertationStatus)}}"</span>
+            </td>
+          </tr>
+        </table>
+
+        <mat-paginator color="accent" class="paginator" [ngClass]="{'paginator-dark': global.isDarkMode}"
+                       [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      </mat-tab>
+    </mat-tab-group>
+    <span class="auto-spacer"></span>
+  </div>
+</div>

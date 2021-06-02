@@ -1,0 +1,35 @@
+@import '~src/colors';
+
+:host {
+  @extend .flex-column-centered-container;
+  @extend .fill;
+}
+
+.file-edit-dialog-content {
+  padding: 0 0 0 16px !important;
+  width: calc(100% - 16px) !important;
+}
+
+.file-input-container {
+  @extend .flex-row-centered-container;
+  width: 100%;
+
+  .file-name-input, .file-url-input {
+    width: calc(100% - 128px - 16px);
+  }
+
+  .file-upload-input {
+    display: none;
+  }
+
+  .file-upload-button, .file-url-checkbox {
+    margin: 0 auto;
+    transform: translateY(-11px);
+  }
+
+  &-phone {
+    .file-name-input, .file-url-input {
+      width: calc(100% - 48px - 16px);
+    }
+  }
+}

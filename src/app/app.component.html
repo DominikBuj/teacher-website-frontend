@@ -1,30 +1,79 @@
-<div class="container">
-  <div class="header">
-    <mat-toolbar>
-      <h1>{{teacher.firstName}} {{teacher.lastName}}</h1>
-      <nav mat-tab-nav-bar>
-        <a mat-tab-link routerLink="updates">Aktualności</a>
-        <a mat-tab-link routerLink="profile">Profil</a>
-        <a mat-tab-link routerLink="publications">Publikacje</a>
-        <a mat-tab-link routerLink="contact">Kontakt</a>
+<div class="app-container mat-app-background ckeditor" [ngClass]="{'dark-mode ckeditor-dark': global.isDarkMode}"
+     [@.disabled]="global.areAnimationsDisabled">
+  <div class="app-header-container">
+    <mat-progress-bar *ngIf="global.isLoading | async" class="loading-bar" mode="indeterminate"></mat-progress-bar>
+    <mat-toolbar color="primary" class="toolbar" [ngClass]="{'toolbar-dark': global.isDarkMode}">
+      <img *ngIf="global.isScreenVeryLarge" class="site-logo"
+           [src]="global.isDarkMode ? darkSiteLogoUrl : lightSiteLogoUrl" alt="logo">
+      <button mat-icon-button *ngIf="!global.isScreenVeryLarge" (click)="sideBar.toggle()" class="toolbar-menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span *ngIf="!global.isScreenSmall" class="toolbar-header mat-display-1">Teacher Website</span>
+      <nav mat-tab-nav-bar *ngIf="global.isScreenVeryLarge" backgroundColor="primary" class="navigation-bar">
+        <a mat-tab-link routerLink="/posts">Aktualności</a>
+        <a mat-tab-link routerLink="/profile">Profil</a>
+        <a mat-tab-link routerLink="/publications">Publikacje</a>
+        <a mat-tab-link routerLink="/dissertations">Prace Dyplomowe</a>
+        <a mat-tab-link routerLink="/contact">Kontakt</a>
       </nav>
       <span class="auto-spacer"></span>
-      <button *ngIf="!!auth.user.value" mat-icon-button color="primary" (click)="settings.switchEditSetting()">
-        <mat-icon>build</mat-icon>
+      <button mat-icon-button *ngIf="global.isLoggedIn" [matMenuTriggerFor]="backgroundPictureMenu">
+        <mat-icon>image</mat-icon>
       </button>
-      <span class="auto-spacer-small"></span>
-      <a *ngIf="!auth.user.value; else isLoggedIn" mat-icon-button color="primary" routerLink="auth/login">
-        <mat-icon>login</mat-icon>
+      <mat-menu #backgroundPictureMenu="matMenu" xPosition="before">
+        <button mat-menu-item [matMenuTriggerFor]="lightBackgroundPictureMenu">Tryb jasny</button>
+        <button mat-menu-item [matMenuTriggerFor]="darkBackgroundPictureMenu">Tryb ciemny</button>
+      </mat-menu>
+      <mat-menu #lightBackgroundPictureMenu="matMenu">
+        <button mat-menu-item *ngFor="let backgroundIndex of backgroundIndexes first as isFirst, last as isLast"
+                [ngStyle]="{'background': 'url(' + siteBackgroundUrl + 'light_' + backgroundIndex.toString() + '_small.jpg)',
+                'margin-bottom': isLast ? '0' : null, 'margin-top': isFirst ? '0' : null}"
+                (click)="setBackground('light', backgroundIndex)" class="menu-item"></button>
+      </mat-menu>
+      <mat-menu #darkBackgroundPictureMenu="matMenu">
+        <button mat-menu-item *ngFor="let backgroundIndex of backgroundIndexes first as isFirst, last as isLast"
+                [ngStyle]="{'background': 'url(' + siteBackgroundUrl + 'dark_' + backgroundIndex.toString() + '_small.jpg)',
+                'margin-bottom': isLast ? '0' : null, 'margin-top': isFirst ? '0' : null}"
+                (click)="setBackground('dark', backgroundIndex)" class="menu-item"></button>
+      </mat-menu>
+      <div *ngIf="global.isLoggedIn" (click)="editingToggle.change.emit()" class="slide-toggle-container">
+        <mat-icon>build</mat-icon>
+        <mat-slide-toggle #editingToggle [checked]="global.isEditing"
+                          (change)="global.areAnimationsDisabled = false; settings.switchEditing()"
+                          (click)="$event.stopPropagation()" style="margin: 0 8px;"></mat-slide-toggle>
+      </div>
+      <div (click)="darkModeToggle.change.emit()" class="slide-toggle-container">
+        <mat-icon>mode_night</mat-icon>
+        <mat-slide-toggle #darkModeToggle [checked]="global.isDarkMode" (click)="$event.stopPropagation()"
+                          (change)="switchDarkMode()" style="margin: 0 8px;"></mat-slide-toggle>
+      </div>
+      <a mat-icon-button *ngIf="global.isLoggedIn; else notLoggedIn" (click)="logout()" style="margin: 0 8px;">
+        <mat-icon>logout</mat-icon>
       </a>
-      <ng-template #isLoggedIn><a mat-icon-button color="primary" (click)="logout()">
-        <mat-icon>exit_to_app</mat-icon>
-      </a></ng-template>
+      <ng-template #notLoggedIn>
+        <a mat-icon-button routerLink="auth/login" style="margin: 0 8px;">
+          <mat-icon>login</mat-icon>
+        </a>
+      </ng-template>
     </mat-toolbar>
   </div>
-  <div class="content">
-    <router-outlet></router-outlet>
-  </div>
-  <div class="footer">
+  <mat-sidenav-container class="app-content-container">
+    <mat-sidenav #sideBar [opened]="global.isScreenVeryLarge ? false : sideBar.opened"
+                 [mode]="global.isScreenLarge ?  'side' : 'over'" [autoFocus]="false" style="min-width: 20vw;">
+      <mat-nav-list>
+        <a mat-list-item routerLink="/posts">Aktualności</a>
+        <a mat-list-item routerLink="/profile">Profil</a>
+        <a mat-list-item routerLink="/publications">Publikacje</a>
+        <a mat-list-item routerLink="/dissertations">Prace Dyplomowe</a>
+        <a mat-list-item routerLink="/contact">Kontakt</a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content style="background-repeat: repeat-y; background-size: 100% 1920px;"
+                         [ngStyle]="{'background-image': global.isDarkMode ? getCssBackgroundImage('dark') : getCssBackgroundImage('light')}">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  <div class="app-footer-container">
 
   </div>
 </div>

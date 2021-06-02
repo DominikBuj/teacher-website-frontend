@@ -1,34 +1,189 @@
-.container {
-  width: 100%;
-  height: 100%;
+@import '~src/colors';
+
+.app-container {
+  min-width: 100%;
+  min-height: 100%;
   display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: 64px auto 25px;
+  grid-template-columns: 100%;
+  grid-template-rows: 64px auto 0;
   grid-template-areas:
-  "header"
-  "content"
-  "footer";
+  "app-header-container"
+  "app-content-container"
+  "app-footer-container";
 }
 
-.header {
-  width: inherit;
-  grid-area: header;
+.app-header-container {
+  grid-area: app-header-container;
+  width: 100%;
+  height: 64px;
   position: fixed;
-  z-index: 1;
+  z-index: 10;
+}
 
-  h1 {
-    margin: 0 30px;
+.toolbar {
+  height: 64px;
+  padding: 0;
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  @extend .border-color-light;
 
-    &:hover {
-      cursor: default;
+  .site-logo {
+    width: 64px;
+    height: 64px;
+  }
+
+  .toolbar-menu {
+    height: 100%;
+    width: 56px;
+  }
+
+  .toolbar-header {
+    height: 100%;
+    margin-bottom: 0;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 64px;
+    cursor: default;
+  }
+
+  .navigation-bar {
+    padding-left: 8px;
+    height: 100%;
+
+    ::ng-deep.mat-tab-links {
+      height: 100%;
+
+      a {
+        height: 100%;
+      }
     }
+  }
+
+  &-dark {
+    @extend .border-color-dark;
   }
 }
 
-.content {
-  grid-area: content;
+.loading-bar {
+  width: 100%;
+  position: fixed;
+  z-index: 11;
 }
 
-.footer {
-  grid-area: footer;
+.menu-item {
+  height: 64px;
+  width: 128px;
+  margin: 8px 0;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.slide-toggle-container {
+  @extend .flex-row-centered-container;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.toolbar-button {
+  margin: 0 8px;
+}
+
+.app-content-container {
+  grid-area: app-content-container;
+}
+
+.app-footer-container{
+  grid-area: app-footer-container;
+}
+
+:host ::ng-deep .ckeditor {
+  --ck-font-size-base: 14px;
+  --ck-focus-ring: 1px solid #7cb342;
+
+  .ck-editor__editable_inline {
+    min-height: 160px;
+    margin-bottom: 16px;
+  }
+
+  &-dark {
+    --ck-focus-ring: 1px solid #ffb300;
+
+    --ck-color-base-background: rgba(255, 255, 255, 0.1);
+
+    --ck-custom-background: hsl(270, 1%, 29%);
+    --ck-custom-foreground: hsl(255, 3%, 18%);
+    --ck-custom-border: hsl(300, 1%, 22%);
+    --ck-custom-white: hsl(0, 0%, 100%);
+
+    --ck-color-base-foreground: var(--ck-custom-background);
+    --ck-color-focus-border: hsl(208, 90%, 62%);
+    --ck-color-text: hsl(0, 0%, 98%);
+    --ck-color-shadow-drop: hsla(0, 0%, 0%, 0.2);
+    --ck-color-shadow-inner: hsla(0, 0%, 0%, 0.1);
+
+    --ck-color-button-default-background: var(--ck-custom-background);
+    --ck-color-button-default-hover-background: hsl(270, 1%, 22%);
+    --ck-color-button-default-active-background: hsl(270, 2%, 20%);
+    --ck-color-button-default-active-shadow: hsl(270, 2%, 23%);
+    --ck-color-button-default-disabled-background: var(--ck-custom-background);
+
+    --ck-color-button-on-background: var(--ck-custom-foreground);
+    --ck-color-button-on-hover-background: hsl(255, 4%, 16%);
+    --ck-color-button-on-active-background: hsl(255, 4%, 14%);
+    --ck-color-button-on-active-shadow: hsl(240, 3%, 19%);
+    --ck-color-button-on-disabled-background: var(--ck-custom-foreground);
+
+    --ck-color-button-action-background: hsl(168, 76%, 42%);
+    --ck-color-button-action-hover-background: hsl(168, 76%, 38%);
+    --ck-color-button-action-active-background: hsl(168, 76%, 36%);
+    --ck-color-button-action-active-shadow: hsl(168, 75%, 34%);
+    --ck-color-button-action-disabled-background: hsl(168, 76%, 42%);
+    --ck-color-button-action-text: var(--ck-custom-white);
+
+    --ck-color-button-save: hsl(120, 100%, 46%);
+    --ck-color-button-cancel: hsl(15, 100%, 56%);
+
+    --ck-color-dropdown-panel-background: var(--ck-custom-background);
+    --ck-color-dropdown-panel-border: var(--ck-custom-foreground);
+
+    --ck-color-split-button-hover-background: var(--ck-color-button-default-hover-background);
+    --ck-color-split-button-hover-border: var(--ck-custom-foreground);
+
+    --ck-color-input-background: var(--ck-custom-background);
+    --ck-color-input-border: hsl(257, 3%, 43%);
+    --ck-color-input-text: hsl(0, 0%, 98%);
+    --ck-color-input-disabled-background: hsl(255, 4%, 21%);
+    --ck-color-input-disabled-border: hsl(250, 3%, 38%);
+    --ck-color-input-disabled-text: hsl(0, 0%, 78%);
+
+    --ck-color-labeled-field-label-background: var(--ck-custom-background);
+
+    --ck-color-list-background: var(--ck-custom-background);
+    --ck-color-list-button-hover-background: var(--ck-color-base-foreground);
+    --ck-color-list-button-on-background: var(--ck-color-base-active);
+    --ck-color-list-button-on-background-focus: var(--ck-color-base-active-focus);
+    --ck-color-list-button-on-text: var(--ck-color-base-background);
+
+    --ck-color-panel-background: var(--ck-custom-background);
+    --ck-color-panel-border: var(--ck-custom-border);
+
+    --ck-color-toolbar-background: var(--ck-custom-background);
+    --ck-color-toolbar-border: var(--ck-custom-border);
+
+    --ck-color-tooltip-background: hsl(252, 7%, 14%);
+    --ck-color-tooltip-text: hsl(0, 0%, 93%);
+
+    --ck-color-image-caption-background: hsl(0, 0%, 97%);
+    --ck-color-image-caption-text: hsl(0, 0%, 20%);
+
+    --ck-color-widget-blurred-border: hsl(0, 0%, 87%);
+    --ck-color-widget-hover-border: hsl(43, 100%, 68%);
+    --ck-color-widget-editable-focus-background: var(--ck-custom-white);
+
+    --ck-color-link-default: hsl(190, 100%, 75%);
+
+    .ck-editor__main > .ck-editor__editable:not(.ck-focused) {
+      border: 1px solid var(--ck-color-toolbar-border);
+    }
+  }
 }

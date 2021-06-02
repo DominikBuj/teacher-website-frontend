@@ -1,0 +1,56 @@
+<div mat-dialog-content class="dialog-container">
+  <h1 class="dialog-title">Orcid</h1>
+  <div class="dialog-content import-table-container">
+    <table mat-table matSort class="import-table" [dataSource]="dataSource">
+
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? selectAll() : null" [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="title">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Tytuł</th>
+        <td mat-cell *matCellDef="let element">{{element.title}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="subtitle">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Podtytuł</th>
+        <td mat-cell *matCellDef="let element">{{element.subtitle}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="publisher">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Wydawca</th>
+        <td mat-cell *matCellDef="let element">{{element.publisher}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Rodzaj</th>
+        <td mat-cell *matCellDef="let element">{{element.type}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Data</th>
+        <td mat-cell *matCellDef="let element">{{element.date}}</td>
+      </ng-container>
+
+      <tr mat-header-row class="row" *matHeaderRowDef="columns"></tr>
+      <tr mat-row class="row" *matRowDef="let row; columns: columns;"></tr>
+    </table>
+  </div>
+  <div class="dialog-actions">
+    <button mat-raised-button color="accent" type="button" class="button" (click)="onSubmit()"
+            [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+            [matTooltip]="global.isScreenSmall ? 'Importuj' : null">
+      <mat-icon>{{global.operations.Add}}</mat-icon>
+      <span class="button-text">Importuj</span>
+    </button>
+  </div>
+</div>

@@ -2,10 +2,10 @@ import {Injectable} from '@angular/core';
 import {LoggerService} from './logger.service';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Update} from '../_models/update.model';
 import {Constants} from '../constants';
 import {catchError, tap} from 'rxjs/operators';
 import {Publication} from '../_models/publication.model';
+import {FunctionsService} from './functions.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,7 @@ export class PublicationService {
   publications: BehaviorSubject<Publication[]>;
 
   constructor(
+    private functions: FunctionsService,
     private logger: LoggerService,
     private http: HttpClient
   ) {
@@ -24,7 +25,7 @@ export class PublicationService {
   getPublications(): Observable<Publication[]> {
     return this.http.get<Publication[]>(Constants.PUBLICATION_URL).pipe(
       tap(_ => this.logger.logMessage(`got publications`)),
-      catchError(this.logger.handleError<Update[]>(`getting publications`))
+      catchError(this.logger.handleError<Publication[]>(`getting publications`))
     );
   }
 
@@ -43,8 +44,16 @@ export class PublicationService {
   replacePublication(publication: Publication): Observable<Publication> {
     const url = `${Constants.PUBLICATION_URL}/${publication.id}`;
     return this.http.put<Publication>(url, publication).pipe(
-      tap((updatedPublication: Publication) => this.logger.logMessage(`updated publication of id ${updatedPublication.id}`)),
-      catchError(this.logger.handleError<Publication>(`updating publication of id ${publication.id}`))
+      tap((replacedPublication: Publication) => {
+        const publications = this.publications.value;
+        const index = this.functions.indexOf<Publication>(publications, publication.id);
+        if (index !== null) {
+          publications[index] = replacedPublication;
+          this.publications.next(publications);
+          this.logger.logMessage(`replaced publication of id ${replacedPublication.id}`);
+        }
+      }),
+      catchError(this.logger.handleError<Publication>(`replacing publication of id ${publication.id}`))
     );
   }
 
@@ -53,9 +62,12 @@ export class PublicationService {
     return this.http.delete(url).pipe(
       tap(_ => {
         const publications = this.publications.value;
-        publications.splice(publications.indexOf(publication), 1);
-        this.publications.next(publications);
-        this.logger.logMessage(`deleted publication of id ${publication.id}`);
+        const index = this.functions.indexOf<Publication>(publications, publication.id);
+        if (index !== null) {
+          publications.splice(index, 1);
+          this.publications.next(publications);
+          this.logger.logMessage(`deleted publication of id ${publication.id}`);
+        }
       }),
       catchError(this.logger.handleError(`deleting publication of id ${publication.id}`))
     );

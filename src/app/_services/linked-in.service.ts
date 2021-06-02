@@ -15,7 +15,21 @@ export class LinkedInService {
   constructor(
     private logger: LoggerService,
     private http: HttpClient
-  ) { }
+  ) {
+  }
+
+  get authorization(): boolean {
+    const authorization = localStorage.getItem('linkedIn');
+    if (!!authorization) {
+      return (authorization === 'true');
+    }
+    localStorage.setItem('linkedIn', 'false');
+    return false;
+  }
+
+  set authorization(value: boolean) {
+    localStorage.setItem('linkedIn', value.toString());
+  }
 
   getAccessToken(authorizationCode: string): Observable<LinkedInAccessTokenResponse> {
     const accessTokenRequest = new AccessTokenRequest(

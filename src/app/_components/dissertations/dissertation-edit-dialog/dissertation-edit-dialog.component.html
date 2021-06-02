@@ -1,0 +1,52 @@
+<form mat-dialog-content class="dialog-container" autocomplete="off" [formGroup]="dissertationForm"
+      (ngSubmit)="onSubmit()">
+  <h1 class="dialog-title">Praca Dyplomowa</h1>
+  <div class="dialog-content">
+    <mat-form-field appearance="fill" color="accent">
+      <mat-label>Temat</mat-label>
+      <input #topic type="text" matInput formControlName="topic" required>
+      <mat-hint align="end">{{topic.value.length}} / 200</mat-hint>
+      <mat-error *ngIf="functions.checkError(dissertationForm, 'topic', 'required')">
+        Temat jest <strong>wymagany</strong>
+      </mat-error>
+      <mat-error *ngIf="functions.checkError(dissertationForm, 'topic', 'maxlength')">
+        Temat może maksymalnie mieć długość <strong>200</strong> znaków
+      </mat-error>
+    </mat-form-field>
+    <div class="input-container" [ngClass]="{'input-container-row': global.isScreenLarge || global.isScreenVeryLarge}">
+      <mat-form-field appearance="fill" color="accent">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status" (ngModelChange)="updateDateDisabled($event)">
+          <mat-option *ngFor="let dissertationStatus of global.dissertationStatuses | enumValues"
+                      [value]="global.dissertationStatuses[dissertationStatus]">
+            {{global.dissertationStatusLabels.get(dissertationStatus)}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span class="auto-spacer"></span>
+      <mat-form-field appearance="fill" color="accent">
+        <mat-label>Wybierz datę</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date">
+        <mat-error *ngIf="submitted && dissertationForm.controls.date.errors?.invalid">Niepoprawna data</mat-error>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <mat-form-field appearance="fill" color="accent">
+      <mat-label>Opis</mat-label>
+      <textarea #description matInput cdkTextareaAutosize formControlName="description" style="overflow: hidden;"></textarea>
+      <mat-hint align="end">{{description.value.length}} / 2000</mat-hint>
+      <mat-error *ngIf="functions.checkError(dissertationForm, 'description', 'maxlength')">
+        Opis może maksymalnie mieć długość <strong>2000</strong> znaków
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="dialog-actions">
+    <button mat-raised-button color="accent" type="submit" class="button"
+            [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+            [matTooltip]="global.isScreenSmall ? operation === global.operations.Add ? 'Dodaj' : 'Zapisz' : null">
+      <mat-icon>{{operation}}</mat-icon>
+      <span *ngIf="operation === global.operations.Add; else save" class="button-text">Dodaj</span>
+      <ng-template #save><span class="button-text">Zapisz</span></ng-template>
+    </button>
+  </div>
+</form>

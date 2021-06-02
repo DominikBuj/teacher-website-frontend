@@ -1,0 +1,109 @@
+@import '~src/colors';
+
+.dissertations-tab-group {
+  width: 100%;
+
+  ::ng-deep.mat-tab-label, ::ng-deep.mat-tab-label-active {
+    min-width: 33.33%;
+  }
+
+  ::ng-deep.mat-tab-header {
+    @extend .primary-background-color-light;
+  }
+
+  &-dark {
+    ::ng-deep.mat-tab-header {
+      @extend .primary-background-color-dark;
+    }
+  }
+}
+
+.dissertations-table {
+  width: 100%;
+}
+
+.dissertations-filter-cell {
+  border: 0;
+  padding: 0 16px !important;
+}
+
+.highlighted-row {
+  td:not(.action-buttons-cell) {
+    cursor: pointer;
+    background-color: whitesmoke;
+  }
+
+  &-dark td:not(.action-buttons-cell) {
+    cursor: pointer;
+    background-color: darkgray;
+  }
+}
+
+.action-buttons-cell {
+  @extend .flex-row-centered-container;
+}
+
+.information-cell {
+  display: flex;
+  padding: 8px 0;
+  overflow: hidden;
+}
+
+.description-cell {
+  display: flex;
+  overflow: hidden;
+}
+
+.row {
+  &.row-with-date.row-with-action-buttons {
+    .mat-column-topic {
+      width: 66.66% !important;
+    }
+    .mat-column-date {
+      width: 16.665% !important;
+    }
+    .mat-column-actionButtons {
+      width: 16.665% !important;
+    }
+  }
+
+  &.row-with-date:not(.row-with-action-buttons) {
+    .mat-column-topic {
+      width: 83.325% !important;
+    }
+    .mat-column-date {
+      width: 16.665% !important;
+    }
+  }
+
+  &:not(.row-with-date).row-with-action-buttons {
+    .mat-column-topic {
+      width: 83.325% !important;
+    }
+    .mat-column-actionButtons {
+      width: 16.665% !important;
+    }
+  }
+
+  &:not(.row-with-date):not(.row-with-action-buttons) {
+    .mat-column-topic {
+      width: 100% !important;
+    }
+  }
+}
+
+.row-without-border td {
+  border: 0;
+}
+
+.expandable-row {
+  height: 0;
+}
+
+textarea.mat-input-element.cdk-textarea-autosize {
+  box-sizing: content-box;
+}
+
+textarea.mat-input-element {
+  padding: 3px 0;
+}

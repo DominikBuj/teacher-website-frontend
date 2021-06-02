@@ -1,17 +1,39 @@
-.container {
+@import '~src/colors';
+
+.publication-parameter {
+  padding-top: 0.5em;
+  line-height: 24px;
+}
+
+.publication-parameter-container {
   width: 100%;
-  min-height: 100%;
-  display: grid;
-  grid-template-columns: auto 1520px auto;
-  grid-template-rows: 100%;
-  grid-template-areas:
-  ". publications .";
+  display: flex;
 
-  .publications {
-    grid-area: publications;
+  &-column {
+    flex-direction: column;
+  }
+}
 
-    .publication {
-      border: 1px solid black;
+.publication-url-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+
+  .publication-url-label {
+    line-height: 36px;
+  }
+
+  .publication-url {
+    display: inline-block;
+    max-width: calc(80vw - 128px - 32px);
+    padding: 0;
+    margin-left: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &-phone {
+      max-width: calc(100vw - 128px);
     }
   }
 }

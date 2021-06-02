@@ -17,6 +17,19 @@ export class OrcidService {
     private http: HttpClient
   ) { }
 
+  get authorization(): boolean {
+    const authorization = localStorage.getItem('orcid');
+    if (!!authorization) {
+      return (authorization === 'true');
+    }
+    localStorage.setItem('orcid', 'false');
+    return false;
+  }
+
+  set authorization(value: boolean) {
+    localStorage.setItem('orcid', value.toString());
+  }
+
   getAccessToken(authorizationCode: string): Observable<OrcidAccessTokenResponse> {
     const accessTokenRequest = new AccessTokenRequest(
       Constants.ORCID_CLIENT_ID,

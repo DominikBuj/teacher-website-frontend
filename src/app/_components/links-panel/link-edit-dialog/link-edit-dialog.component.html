@@ -1,0 +1,46 @@
+<form mat-dialog-content class="dialog-container" autocomplete="off" [formGroup]="linkForm" (ngSubmit)="onSubmit()">
+  <h1 class="dialog-title">Link</h1>
+  <div class="dialog-content">
+    <div class="input-container" [ngClass]="{'input-container-row': global.isScreenLarge || global.isScreenVeryLarge}">
+      <mat-form-field appearance="fill" color="accent">
+        <mat-label>Rodzaj</mat-label>
+        <mat-select formControlName="type" (ngModelChange)="updateNameDisabled($event)" required>
+          <mat-option *ngFor="let linkType of availableLinkTypes"
+                      [value]="linkType">{{global.linkTypeLabels.get(global.linkTypes[linkType].toString())}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span class="auto-spacer"></span>
+      <mat-form-field appearance="fill" color="accent">
+        <mat-label>Nazwa</mat-label>
+        <input #name matInput type="text" formControlName="name" required>
+        <mat-hint align="end">{{name.value.length}} / 100</mat-hint>
+        <mat-error *ngIf="functions.checkError(linkForm, 'name', 'required')">
+          Nazwa jest <strong>wymagana</strong>
+        </mat-error>
+        <mat-error *ngIf="functions.checkError(linkForm, 'name', 'maxlength')">
+          Nazwa może maksymalnie mieć długość <strong>100</strong> znaków
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <mat-form-field appearance="fill" color="accent">
+      <mat-label>Url</mat-label>
+      <input #url matInput type="url" formControlName="url" required>
+      <mat-hint align="end">{{url.value.length}} / 2000</mat-hint>
+      <mat-error *ngIf="functions.checkError(linkForm, 'url', 'required')">
+        Url jest <strong>wymagane</strong>
+      </mat-error>
+      <mat-error *ngIf="functions.checkError(linkForm, 'url', 'maxlength')">
+        Url może maksymalnie mieć długość <strong>2000</strong> znaków
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div class="dialog-actions">
+    <button mat-raised-button color="accent" type="submit" class="button"
+            [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+            [matTooltip]="global.isScreenSmall ? operation === global.operations.Add ? 'Dodaj' : 'Zapisz' : null">
+      <mat-icon>{{operation}}</mat-icon>
+      <span *ngIf="operation === global.operations.Add; else save" class="button-text">Dodaj</span>
+      <ng-template #save><span class="button-text">Zapisz</span></ng-template>
+    </button>
+  </div>
+</form>

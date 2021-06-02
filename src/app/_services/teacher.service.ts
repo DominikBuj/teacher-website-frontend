@@ -16,9 +16,7 @@ export class TeacherService {
     private logger: LoggerService,
     private http: HttpClient
   ) {
-    const blankTeacher = new Teacher(undefined, undefined, undefined, undefined, undefined,
-      undefined, undefined, undefined, undefined);
-    this.teacher = new BehaviorSubject<Teacher>(blankTeacher);
+    this.teacher = new BehaviorSubject<Teacher>(null);
     this.getTeacher().subscribe((teacher: Teacher) => this.teacher.next(teacher));
   }
 
@@ -29,13 +27,23 @@ export class TeacherService {
     );
   }
 
+  private partialTeacherUpdate(teacher: Teacher): void {
+    const newTeacher = this.teacher.value;
+    for (const key of Object.keys(teacher)) {
+      if (!!teacher[key]) {
+        newTeacher[key] = teacher[key];
+      }
+    }
+    this.teacher.next(newTeacher);
+  }
+
   updateTeacher(update: any): Observable<Teacher> {
     return this.http.patch<Teacher>(Constants.TEACHER_URL, update).pipe(
       tap((teacher: Teacher) => {
-        this.logger.logMessage(`added teacher`);
-        this.teacher.next(teacher);
+        this.logger.logMessage(`updated teacher`);
+        this.partialTeacherUpdate(teacher);
       }),
-      catchError(this.logger.handleError<Teacher>(`adding teacher`))
+      catchError(this.logger.handleError<Teacher>(`updating teacher`))
     );
   }
 }

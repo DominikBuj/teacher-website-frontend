@@ -1,0 +1,60 @@
+@import '~src/colors';
+
+.links-panel {
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  @extend .primary-background-color-light;
+  @extend .border-color-light;
+
+  .links-panel-header {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+
+  &-dark {
+    @extend .primary-background-color-dark;
+    @extend .border-color-dark;
+  }
+}
+
+.link {
+  width: 128px;
+  height: 48px;
+  margin: 0 8px;
+  @extend .flex-row-centered-container;
+}
+
+.link-with-image {
+  width: 64px;
+  height: 64px;
+  padding: 0;
+
+  img {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.link-edit-panel {
+  @extend .flex-column-centered-container;
+  display: none;
+  @extend .border-light;
+  @extend .card-background-color-light;
+
+  &-dark {
+    @extend .border-dark;
+    @extend .card-background-color-dark;
+  }
+}
+
+.editable-link:hover {
+  .link, .link-with-image {
+    display: none;
+  }
+
+  .link-edit-panel {
+    position: absolute;
+    display: inline-block;
+  }
+}

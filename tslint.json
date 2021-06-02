@@ -12,7 +12,7 @@
     },
     "array-type": false,
     "arrow-return-shorthand": true,
-    "curly": true,
+    "curly": false,
     "deprecation": {
       "severity": "warning"
     },
@@ -140,7 +140,8 @@
       true,
       "attribute",
       "app",
-      "camelCase"
+      "camelCase",
+      "ngVar"
     ],
     "component-selector": [
       true,

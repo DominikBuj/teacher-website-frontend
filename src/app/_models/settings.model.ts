@@ -1,7 +1,9 @@
 export class Settings {
-  edit: boolean;
+  isEditing: boolean;
+  isDarkMode: boolean;
 
-  constructor(edit: boolean) {
-    this.edit = edit;
+  constructor(isEditing: boolean, isDarkMode: boolean) {
+    this.isEditing = isEditing;
+    this.isDarkMode = isDarkMode;
   }
 }

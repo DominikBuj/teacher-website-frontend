@@ -8,21 +8,34 @@ import {Settings} from '../_models/settings.model';
 export class SettingsService {
   settings: BehaviorSubject<Settings>;
 
-  constructor() {
+  initSettings(): string {
     let settingsString = localStorage.getItem('settings');
 
     if (!settingsString) {
-      const settings = new Settings(false);
+      const settings = new Settings(false, false);
       localStorage.setItem('settings', JSON.stringify(settings));
       settingsString = localStorage.getItem('settings');
     }
 
+    return settingsString;
+  }
+
+  constructor() {
+    const settingsString = this.initSettings();
     this.settings = new BehaviorSubject<Settings>(JSON.parse(settingsString));
   }
 
-  public switchEditSetting(): void {
+  switchEditing(): void {
     const settings = this.settings.value;
-    settings.edit = !settings.edit;
+    settings.isEditing = !settings.isEditing;
+    localStorage.setItem('settings', JSON.stringify(settings));
+    this.settings.next(settings);
+  }
+
+  switchDarkMode(): void {
+    const settings = this.settings.value;
+    settings.isDarkMode = !settings.isDarkMode;
+    localStorage.setItem('settings', JSON.stringify(settings));
     this.settings.next(settings);
   }
 }

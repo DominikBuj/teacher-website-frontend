@@ -1,84 +1,345 @@
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @import '~@angular/material/theming';
+@import 'colors';
 // Plus imports for other _components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat-core();
+$typography: mat-typography-config(
+  $font-family: '"Roboto", sans-serif',
+  $display-1: mat-typography-level(32px, 32px, 500, '"Rubik", sans-serif'),
+  $display-2: mat-typography-level(96px, 96px, 500, '"Rubik", sans-serif'),
+  $display-3: mat-typography-level(26px, 26px, 400, '"Roboto", sans-serif'),
+  $headline: mat-typography-level(32px, 32px, 700, '"Roboto", sans-serif'),
+  $title: mat-typography-level(24px, 24px, 700, '"Roboto", sans-serif'),
+  $subheading-2: mat-typography-level(20px, 20px, 400, '"Roboto", sans-serif'),
+  $subheading-1: mat-typography-level(18px, 18px, 300, '"Roboto", sans-serif'),
+  $body-1: mat-typography-level(16px, 16px, 400, '"Roboto", sans-serif'),
+  $body-2: mat-typography-level(16px, 16px, 400, '"Roboto", sans-serif'),
+  $button: mat-typography-level(16px, 16px, 500, '"Roboto", sans-serif'),
+  $caption: mat-typography-level(14px, 14px, 400, '"Roboto", sans-serif')
+  /*$display-1: mat-typography-level(32px, 32px, 500, '"Rubik", sans-serif'),
+  $display-2: mat-typography-level(96px, 96px, 500, '"Rubik", sans-serif'),
+  $display-3: mat-typography-level(26px, 26px, 400, '"Roboto", sans-serif'),
+  $headline: mat-typography-level(32px, 32px, 700, '"Roboto", sans-serif'),
+  $title: mat-typography-level(64px, 64px, 700, '"Roboto", sans-serif'),
+  $title: mat-typography-level(24px, 24px, 700, '"Roboto", sans-serif'),
+  $subheading-2: mat-typography-level(20px, 20px, 400, '"Roboto", sans-serif'),
+  $subheading-1: mat-typography-level(18px, 18px, 300, '"Roboto", sans-serif'),
+  $body-1: mat-typography-level(16px, 16px, 400, '"Roboto", sans-serif'),
+  $body-2: mat-typography-level(16px, 16px, 400, '"Roboto", sans-serif'),
+  $button: mat-typography-level(16px, 16px, 500, '"Roboto", sans-serif'),
+  $caption: mat-typography-level(14px, 14px, 400, '"Roboto", sans-serif')*/
+);
+
+@include mat-core($typography);
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$TeacherWebsiteFrontEnd-primary: mat-palette($mat-grey);
-$TeacherWebsiteFrontEnd-accent: mat-palette($mat-pink, A200, A100, A400);
-
-// The warn palette is optional (defaults to red).
-$TeacherWebsiteFrontEnd-warn: mat-palette($mat-red);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$TeacherWebsiteFrontEnd-theme: mat-light-theme((
-  color: (
-    primary: $TeacherWebsiteFrontEnd-primary,
-    accent: $TeacherWebsiteFrontEnd-accent,
-    warn: $TeacherWebsiteFrontEnd-warn,
-    foreground: $TeacherWebsiteFrontEnd-accent,
-    background: $TeacherWebsiteFrontEnd-primary
-  )
-));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-//@include angular-material-theme($TeacherWebsiteFrontEnd-theme);
+@include angular-material-theme($light-theme);
+
+.dark-mode {
+  @include angular-material-color($dark-theme);
+}
 
 /* You can add global styles to this file, and also import other style files */
+html, body {
+  width: 100%;
+  height: 100%;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+}
 
-.flex-container-centered-column {
+/*h1, h2, h3, h4, h5, h6, p, span {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1em !important;
+}*/
+
+/* Fonts */
+/*.header-font-roboto-slab {
+  font-family: Roboto Slab, serif !important;
+}*/
+
+/* GLOBAL STYLING */
+
+.button {
+  mat-icon {
+    margin-right: 8px;
+  }
+
+  &-without-text {
+    mat-icon {
+      margin-right: 0;
+    }
+
+    .button-text {
+      display: none;
+    }
+  }
+}
+
+mat-form-field {
+  @extend .large-input;
+}
+
+mat-error, mat-hint {
+  transform: translateY(-2px);
+}
+
+mat-grid-tile {
+  .mat-figure {
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* GLOBAL STYLING */
+
+.input-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+  width: 100%;
 
-.flex-container-centered-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
+  &-row {
+    flex-direction: row;
 
-.auto-spacer {
-  flex: 1 1 auto;
-}
-
-.auto-spacer-small {
-  flex: 0.05 1 auto;
-}
-
-.medium-input {
-  width: 442px;
-}
-
-.card-top {
-  margin-top: 20px;
-}
-
-.card-bottom {
-  margin-bottom: 20px;
-}
-
-.editing-buttons {
-  @extend .flex-container-centered-row;
-  height: 100px;
-
-  a, button {
-    margin: 0 20px;
+    mat-form-field {
+      @extend .medium-input;
+    }
   }
+}
+
+.component-container {
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: 112px auto 80vw auto 112px;
+  grid-template-rows: 100%;
+  grid-template-areas: "component-header . component-content-container . .";
+
+  &-laptop {
+    grid-template-columns: 80px auto 80vw auto 80px;
+  }
+
+  &-tablet {
+    grid-template-columns: auto auto 85vw;
+    grid-template-areas: "component-header . component-content-container";
+  }
+
+  &-phone {
+    grid-template-columns: auto;
+    grid-template-areas: "component-content-container";
+  }
+}
+
+.component-header {
+  grid-area: component-header;
+  height: 100%;
+  width: 112px;
+
+  & > span {
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    writing-mode: vertical-rl;
+    margin-top: 32px;
+    margin-left: 16px;
+    line-height: 100%;
+    font-size: 96px;
+    font-weight: 500;
+    cursor: default;
+    white-space: pre;
+  }
+
+  &-tablet {
+    width: 80px;
+
+    & > span {
+      font-size: 64px;
+      line-height: 100%;
+    }
+  }
+}
+
+.component-content-container {
+  grid-area: component-content-container;
+  z-index: 2;
+  border-style: solid;
+  border-width: 0 1px;
+  @extend .card-background-color-light;
+  @extend .border-color-light;
+
+  &-dark {
+    @extend .card-background-color-dark;
+    @extend .border-color-dark;
+  }
+
+  &-tablet {
+    border-width: 0 0 0 1px;
+  }
+
+  &-phone {
+    border-width: 0;
+  }
+}
+
+/*.component-content {
+  @extend .flex-column-centered-container;
+  @extend .auto-spacer;
+  margin: 0 32px;
+  width: calc(100% - 64px);
+
+  &-tablet {
+    margin: 0 16px;
+    width: calc(100% - 32px);
+  }
+}*/
+
+.edit-buttons-container {
+  @extend .flex-row-centered-container;
+  width: 100%;
+  height: 96px;
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  @extend .primary-background-color-light;
+  @extend .border-color-light;
+
+  &-dark {
+    @extend .primary-background-color-dark;
+    @extend .border-color-dark;
+  }
+}
+
+.entry-edit-buttons-container {
+  @extend .flex-row-centered-container;
+  display: flex !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 64px;
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  @extend .primary-background-color-light;
+  @extend .border-color-light;
+
+  &-dark {
+    @extend .primary-background-color-dark;
+    @extend .border-color-dark;
+  }
+}
+
+.paginator {
+  align-self: end;
+
+  .mat-icon-button:not(.mat-button-disabled) {
+    color: mat-color($accent);
+  }
+
+  &-dark {
+    .mat-icon-button:not(.mat-button-disabled) {
+      color: mat-color($accent-dark);
+    }
+  }
+}
+
+.dialog {
+  .mat-dialog-container {
+    padding: 0;
+    @extend .border-light;
+    border-top: 6px solid mat-color($accent, 0.75);
+
+    .mat-dialog-content {
+      padding: 0 !important;
+    }
+
+    .dialog-container {
+      width: 100%;
+
+      .dialog-title {
+        padding: 16px;
+        margin-bottom: 0;
+        width: calc(100% - 32px);
+      }
+
+      .dialog-content {
+        display: flex;
+        flex-direction: column;
+        padding: 0 16px;
+        width: calc(100% - 32px);
+      }
+
+      .dialog-actions {
+        @extend .flex-row-centered-container;
+        width: 100%;
+        height: 64px;
+        border-style: solid;
+        border-width: 1px 0 0 0;
+        @extend .primary-background-color-light;
+        @extend .border-color-light;
+      }
+    }
+  }
+
+  &-dark {
+    @extend .dialog;
+
+    .mat-dialog-container {
+      @extend .border-dark;
+      border-top: 6px solid mat-color($accent-dark, 0.75);
+
+      .dialog-container {
+        .dialog-actions {
+          @extend .primary-background-color-dark;
+          @extend .border-color-dark;
+        }
+      }
+    }
+  }
+}
+
+.entry-container {
+  width: 100%;
+
+  .entry-table {
+    width: 100%;
+
+    .entry-table-cell {
+      padding: 0 32px !important;
+
+      &-tablet {
+        padding: 0 16px !important;
+      }
+    }
+  }
+
+  .entry-paginator {
+    margin: 16px 16px 0 16px;
+    width: calc(100% - 32px);
+
+    &-tablet {
+      margin: 8px 16px 0 8px;
+      width: calc(100% - 16px);
+    }
+  }
+}
+
+.no-border {
+  border: 0 !important;
+}
+
+.ckeditor-container {
+  display: block;
+  width: 100%;
+  overflow: hidden;
 }

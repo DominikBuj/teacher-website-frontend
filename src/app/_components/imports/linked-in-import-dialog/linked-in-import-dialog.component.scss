@@ -1,0 +1,34 @@
+@import '~src/colors';
+
+:host {
+  @extend .flex-column-centered-container;
+  @extend .fill;
+}
+
+.import-table-container {
+  width: 100% !important;
+  padding: 0 !important;
+
+  .import-table {
+    width: 100% !important;
+    word-break: break-word;
+  }
+
+  .row {
+    .mat-column-select {
+      padding: 0 !important;
+      width: 5% !important;
+      text-align: center !important;
+    }
+
+    .mat-column-parameterLabel {
+      padding: 0 !important;
+      width: 15% !important;
+    }
+
+    .mat-column-oldParameter, .mat-column-newParameter {
+      padding: 0 !important;
+      width: 40% !important;
+    }
+  }
+}

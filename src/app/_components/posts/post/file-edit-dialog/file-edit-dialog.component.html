@@ -1,0 +1,53 @@
+<form mat-dialog-content class="dialog-container" autocomplete="off" [formGroup]="fileForm" (ngSubmit)="onSubmit()">
+  <h1 class="dialog-title">Plik</h1>
+  <div class="dialog-content file-edit-dialog-content">
+    <div class="file-input-container" [ngClass]="{'file-input-container-phone': global.isScreenSmall}">
+      <mat-form-field appearance="fill" color="accent" class="file-name-input">
+        <mat-label>Nazwa</mat-label>
+        <input #name matInput type="text" formControlName="name" required>
+        <mat-hint align="end">{{name.value.length}} / 100</mat-hint>
+        <mat-error *ngIf="functions.checkError(fileForm, 'name', 'required')">
+          Nazwa jest <strong>wymagana</strong>
+        </mat-error>
+        <mat-error *ngIf="functions.checkError(fileForm, 'name', 'maxlength')">
+          Nazwa może maksymalnie mieć długość <strong>100</strong> znaków
+        </mat-error>
+      </mat-form-field>
+      <input #fileUpload class="file-upload-input" [disabled]="!global.canEdit()" type="file"
+             (change)="uploadFile(fileUpload.files)">
+      <button mat-raised-button class="button file-upload-button" color="accent" (click)="fileUpload.click()"
+              [matTooltip]="global.isScreenSmall ? 'Wyślij' : null" type="button"
+              [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}">
+        <mat-icon>add_a_photo</mat-icon>
+        <span class="button-text">Wyślij</span>
+      </button>
+    </div>
+    <div class="file-input-container" [ngClass]="{'file-input-container-phone': global.isScreenSmall}">
+      <mat-form-field appearance="fill" color="accent" class="file-url-input">
+        <mat-label>Url</mat-label>
+        <input #url matInput type="url" formControlName="url" required>
+        <mat-hint align="end">{{url.value.length}} / 2000</mat-hint>
+        <mat-error *ngIf="functions.checkError(fileForm, 'url', 'required')">
+          Url jest <strong>wymagane</strong>
+        </mat-error>
+        <mat-error *ngIf="functions.checkError(fileForm, 'url', 'maxlength')">
+          Url może maksymalnie mieć długość <strong>2000</strong> znaków
+        </mat-error>
+      </mat-form-field>
+      <mat-checkbox #fileUrlCheckbox class="file-url-checkbox" [labelPosition]="global.isScreenSmall ? null : 'before'"
+                    [matTooltip]="global.isScreenSmall ? 'Wyłącz' : null" [disabled]="!fileUrlCheckbox.checked"
+                    (click)="fileUrlCheckbox.checked ? enableFileUrl() : null">
+        <span *ngIf="!global.isScreenSmall">Wyłącz</span>
+      </mat-checkbox>
+    </div>
+  </div>
+  <div class="dialog-actions">
+    <button mat-raised-button color="accent" type="submit" class="button"
+            [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+            [matTooltip]="global.isScreenSmall ? operation === global.operations.Add ? 'Dodaj' : 'Zapisz' : null">
+      <mat-icon>{{operation}}</mat-icon>
+      <span *ngIf="operation === global.operations.Add; else save" class="button-text">Dodaj</span>
+      <ng-template #save><span class="button-text">Zapisz</span></ng-template>
+    </button>
+  </div>
+</form>

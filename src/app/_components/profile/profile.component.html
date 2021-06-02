@@ -1,16 +1,105 @@
-<div *ngIf="functions.isEditing(); else notEditing">
-  <app-profile-edit [teacher]="teacher"></app-profile-edit>
-</div>
-<ng-template #notEditing>
-  <div class="container">
-    <div class="info">
-      <h1>{{teacher.firstName}} {{teacher.lastName}}</h1>
-      <h2>{{teacher.university}}</h2>
-      <h2>{{teacher.subject}}</h2>
-      <p>{{teacher.about}}</p>
-    </div>
-    <div class="picture flex-container-centered-column">
-      <img [src]="teacher.pictureUrl" width="600" height="600" alt="">
+<div class="profile-container" [ngClass]="{'profile-container-phone': global.isScreenMedium || global.isScreenSmall}">
+  <div class="teacher-picture-container" *ngIf="!!teacher?.pictureUrl || global.canEdit()"
+       [ngClass]="{'teacher-picture-container-dark': global.isDarkMode,
+       'teacher-picture-container-laptop': global.isScreenLarge,
+       'teacher-picture-container-phone': global.isScreenMedium || global.isScreenSmall}">
+    <div class="teacher-picture-wrapper" (click)="!!teacher?.pictureUrl ? profilePicture.click() : null"
+         [ngClass]="{'has-image': !!teacher?.pictureUrl, 'teacher-picture-wrapper-editable': global.canEdit()}">
+      <input #profilePicture [disabled]="!global.canEdit()" type="file"
+             (change)="uploadProfilePicture(profilePicture.files)">
+      <img [src]="teacher?.pictureUrl" alt="zdjęcie profilowe">
+      <button mat-raised-button class="button" color="accent" (click)="profilePicture.click()"
+              [matTooltip]="global.isScreenSmall ? 'Wyślij' : null"
+              [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}">
+        <mat-icon>add_a_photo</mat-icon>
+        <span class="button-text">Wyślij</span>
+      </button>
     </div>
   </div>
-</ng-template>
+  <div class="teacher-info-container" [ngClass]="{'teacher-info-container-dark': global.isDarkMode,
+       'teacher-info-container-phone': global.isScreenMedium || global.isScreenSmall}">
+    <form *ngIf="global.canEdit(); else notEditing" class="teacher-info" autocomplete="off"
+          [formGroup]="teacherProfileForm" (ngSubmit)="onSubmit()">
+      <div class="edit-buttons-container" [ngClass]="{'edit-buttons-container-dark': global.isDarkMode}">
+        <span class="auto-spacer"></span>
+        <a mat-raised-button color="accent" (click)="linkedInService.authorization = true"
+           class="button" [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+           [matTooltip]="global.isScreenSmall ? 'Importuj LinkedIn' : null" [href]="linkedInAuthorizationUrl">
+          <mat-icon>{{global.operations.Import}}</mat-icon>
+          <span class="button-text">Importuj LinkedIn</span>
+        </a>
+        <span class="auto-spacer"></span>
+        <button mat-raised-button color="accent" type="submit" class="button"
+                [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+                [matTooltip]="global.isScreenSmall ? 'Zapisz' : null">
+          <mat-icon>{{global.operations.Save}}</mat-icon>
+          <span class="button-text">Zapisz</span>
+        </button>
+        <span class="auto-spacer"></span>
+      </div>
+      <div class="teacher-info-input">
+        <div class="input-container"
+             [ngClass]="{'input-container-row': global.isScreenMedium || global.isScreenVeryLarge}">
+          <mat-form-field appearance="fill" color="accent">
+            <mat-label>Imię</mat-label>
+            <input #firstName type="text" matInput formControlName="firstName">
+            <mat-hint align="end">{{firstName.value.length}} / 100</mat-hint>
+            <mat-error *ngIf="functions.checkError(teacherProfileForm, 'firstName', 'maxlength')">
+              Imię może maksymalnie mieć długość <strong>100</strong> znaków
+            </mat-error>
+          </mat-form-field>
+          <span class="auto-spacer"></span>
+          <mat-form-field appearance="fill" color="accent">
+            <mat-label>Nazwisko</mat-label>
+            <input #lastName type="text" matInput formControlName="lastName">
+            <mat-hint align="end">{{lastName.value.length}} / 100</mat-hint>
+            <mat-error *ngIf="functions.checkError(teacherProfileForm, 'lastName', 'maxlength')">
+              Nazwisko może maksymalnie mieć długość <strong>100</strong> znaków
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="input-container"
+             [ngClass]="{'input-container-row': global.isScreenMedium || global.isScreenVeryLarge}">
+          <mat-form-field appearance="fill" color="accent">
+            <mat-label>Uczelnia</mat-label>
+            <input #university type="text" matInput formControlName="university">
+            <mat-hint align="end">{{university.value.length}} / 100</mat-hint>
+            <mat-error *ngIf="functions.checkError(teacherProfileForm, 'university', 'maxlength')">
+              Uczelnia może maksymalnie mieć długość <strong>100</strong> znaków
+            </mat-error>
+          </mat-form-field>
+          <span class="auto-spacer"></span>
+          <mat-form-field appearance="fill" color="accent">
+            <mat-label>Przedmiot</mat-label>
+            <input #subject type="text" matInput formControlName="subject">
+            <mat-hint align="end">{{subject.value.length}} / 100</mat-hint>
+            <mat-error *ngIf="functions.checkError(teacherProfileForm, 'subject', 'maxlength')">
+              Przedmiot może maksymalnie mieć długość <strong>100</strong> znaków
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="ckeditor-container">
+          <ckeditor [editor]="ckEditor" formControlName="about"></ckeditor>
+        </div>
+        <span class="auto-spacer"></span>
+      </div>
+    </form>
+    <ng-template #notEditing>
+      <div class="teacher-info">
+        <div class="teacher-info-header-container">
+          <h1 class="teacher-name">{{teacher?.firstName}} {{teacher?.lastName}}</h1>
+          <h2 class="teacher-occupation">{{teacher?.university}}</h2>
+          <h2 class="teacher-occupation">{{teacher?.subject}}</h2>
+        </div>
+        <div *ngIf="!!teacher?.about" class="teacher-info-content-container"
+             [ngClass]="{'teacher-info-content-container-dark': global.isDarkMode}">
+          <span class="teacher-info-content-label">O mnie</span>
+          <div class="teacher-info-content" [innerHTML]="teacher?.about"></div>
+        </div>
+        <span class="auto-spacer"></span>
+      </div>
+    </ng-template>
+    <app-links-panel *ngIf="linkService.links.value.length > 0 || global.canEdit()" class="links-panel"
+                     [isLimited]="true"></app-links-panel>
+  </div>
+</div>

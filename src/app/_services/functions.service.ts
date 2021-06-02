@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Authorization} from '../_models/authorization.enum';
-import {Teacher} from '../_models/teacher.model';
-import {AuthService} from './auth.service';
-import {SettingsService} from './settings.service';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {TeacherService} from './teacher.service';
+import {GlobalService} from './global.service';
+import {ComponentType} from '@angular/cdk/overlay';
+import {FormGroup} from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -10,60 +11,68 @@ import {SettingsService} from './settings.service';
 export class FunctionsService {
 
   constructor(
-    private auth: AuthService,
-    private settings: SettingsService
-  ) { }
-
-  isEditing(): boolean {
-    return (this.auth.user.value && this.settings.settings.value.edit);
+    private teacherService: TeacherService,
+    private dialog: MatDialog,
+    private global: GlobalService
+  ) {
   }
 
-  getAuthorization(type: Authorization): boolean {
-    const authorization = localStorage.getItem(type);
-    if (!authorization) {
-      localStorage.setItem(type, 'false');
-      return false;
-    }
-    return (authorization === 'true');
+  checkError(formGroup: FormGroup, controlName: string, errorName: string): boolean {
+    return formGroup.controls[controlName].hasError(errorName);
   }
 
-  setAuthorization(type: Authorization, authorization: boolean): boolean {
-    localStorage.setItem(type, authorization.toString());
-    return authorization;
+  createModelFromForm<T>(oldModel: T, form: T): T {
+    const model = {} as T;
+
+    Object.keys(oldModel).forEach((key: string) => model[key] = oldModel[key]);
+    Object.keys(form).forEach((key: string) => model[key] = form[key]);
+
+    return model;
   }
 
-  getDate(year: number, month: number, day: number): number {
-    let yearTicks = year ? 31556952000 * (year - 1970) : 0;
-    yearTicks = yearTicks < 0 ? 0 : yearTicks;
-    const monthTicks = month ? 2592000000 * month : 0;
-    const dayTicks = day ? 86400000 * day : 0;
-    return yearTicks + monthTicks + dayTicks;
-  }
-
-  fillFormWithObject(form: any, formValues: string[], object: any): void {
-    formValues.forEach((value: string) => form[value] = object[value]);
-  }
-
-  updateFormValue(form: any, valueName: string, valueValue: any): void {
-    if (valueValue) {
-      form[valueName] = valueValue;
+  fillModelFromForm<T>(keys: string[], form: any, model: T): void {
+    for (const key of keys) {
+      if (!!form[key]) {
+        model[key] = form[key];
+      }
     }
   }
 
-  createTeacherUpdate(teacherValues: string[], form: any, teacher: Teacher): any {
-    const update = [];
-
-    teacherValues.forEach((value: string) => {
-      if (form[value] !== teacher[value]) {
+  createModelUpdate<T>(keys: string[], newModel: T, oldModel?: T): any {
+    const modelUpdate = [];
+    keys.forEach((key: string) => {
+      if (!oldModel || oldModel[key] !== newModel[key]) {
         const valueUpdate = {
           op: 'add',
-          path: `/${value}`,
-          value: form[value]
+          path: `/${key}`,
+          value: newModel[key]
         };
-        update.push(valueUpdate);
+        modelUpdate.push(valueUpdate);
       }
     });
+    return modelUpdate;
+  }
 
-    return update;
+  openDialog(component: ComponentType<any>, data?: any): MatDialogRef<any> {
+    return this.dialog.open(component, {
+      data,
+      panelClass: this.global.isDarkMode ? 'dialog-dark' : 'dialog',
+      width: '960px'
+    });
+  }
+
+  indexOf<T>(array: T[], id: number): number {
+    for (let index = 0; index < array.length; ++index) {
+      if (array[index][`id`] === id) {
+        return index;
+      }
+    }
+    return null;
+  }
+
+  logModel<T>(model: T): void {
+    for (const key of Object.keys(model)) {
+      console.log(`key ${key} is ${model[key]}`);
+    }
   }
 }

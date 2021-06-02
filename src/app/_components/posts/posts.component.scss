@@ -1,0 +1,19 @@
+@import '~src/colors';
+
+.post-card {
+  cursor: pointer;
+
+  mat-card-header img {
+    margin-right: 16px;
+  }
+
+  .post-date {
+    margin-top: 0.5em !important;
+    align-self: flex-end;
+    font-style: italic;
+  }
+
+  mat-card-actions {
+    cursor: default;
+  }
+}

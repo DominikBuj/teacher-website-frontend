@@ -1,17 +1,21 @@
-<form class="flex-container-centered-column" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit()" novalidate>
-  <h1>Zaloguj się</h1>
-  <mat-form-field appearance="outline">
-    <mat-label>Nazwa Użytkownika</mat-label>
-    <input type="text" matInput name="username" #username="ngModel" [(ngModel)]="loginForm.username" required>
-    <mat-error *ngIf="f.submitted && username.errors?.required">Nazwa użytkownika jest wymagana</mat-error>
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Hasło</mat-label>
-    <input matInput [type]="hidePassword ? 'password' : 'text'" name="password" #password="ngModel" [(ngModel)]="loginForm.password" required>
-    <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
-      <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+<div class="login-container">
+  <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <h1 class="login-form-header">Zaloguj się</h1>
+    <mat-form-field appearance="outline" color="accent">
+      <mat-label>Nazwa Użytkownika</mat-label>
+      <input type="text" matInput formControlName="username">
+      <mat-error *ngIf="submitted && loginForm.controls.username.errors?.required">Nazwa użytkownika jest wymagana</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" color="accent">
+      <mat-label>Hasło</mat-label>
+      <input matInput autocomplete="off" [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+      <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      <mat-error *ngIf="submitted && loginForm.controls.password.errors?.required">Hasło jest wymagane</mat-error>
+    </mat-form-field>
+    <button mat-raised-button type="submit" color="accent">
+      <span>Zaloguj się</span>
     </button>
-    <mat-error *ngIf="f.submitted && password.errors?.required">Hasło jest wymagane</mat-error>
-  </mat-form-field>
-  <button mat-raised-button type="submit">Zaloguj się</button>
-</form>
+  </form>
+</div>

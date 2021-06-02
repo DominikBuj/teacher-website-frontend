@@ -1,0 +1,97 @@
+<div class="component-container" [ngClass]="{'component-container-laptop': global.isScreenLarge,
+     'component-container-tablet': global.isScreenMedium, 'component-container-phone': global.isScreenSmall}">
+  <div *ngIf="!global.isScreenSmall" class="component-header"
+       [ngClass]="{'component-header-tablet': !global.isScreenVeryLarge}">
+    <span>Aktualności</span>
+  </div>
+  <div class="component-content-container" [ngClass]="{'component-content-container-dark': global.isDarkMode,
+       'component-content-container-tablet': global.isScreenMedium, 'component-content-container-phone': global.isScreenSmall}">
+    <div @easeInOutVerticalEditingContainer *ngIf="global.canEdit()" class="edit-buttons-container"
+         (@easeInOutVerticalEditingContainer.done)="global.areAnimationsDisabled = true; changeDetectorRef.detectChanges();"
+         [ngClass]="{'edit-buttons-container-dark': global.isDarkMode}">
+      <a @easeInOutEditingButton mat-raised-button color="accent" [routerLink]="['/post']" class="button"
+         [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+         [matTooltip]="global.isScreenSmall ? 'Dodaj' : null">
+        <mat-icon>{{global.operations.Add}}</mat-icon>
+        <span class="button-text">Dodaj</span>
+      </a>
+    </div>
+    <div class="entry-container">
+      <table mat-table matSort multiTemplateDataRows class="entry-table" [dataSource]="postsDataSource">
+
+        <ng-container matColumnDef="title">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Tytuł</th>
+        </ng-container>
+
+        <ng-container matColumnDef="subtitle">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Podtytuł</th>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Data</th>
+        </ng-container>
+
+        <ng-container matColumnDef="filter">
+          <th mat-header-cell *matHeaderCellDef [colSpan]="columns.length" class="entry-table-cell no-border"
+              [ngClass]="{'entry-table-cell-tablet': global.isScreenSmall || global.isScreenMedium}">
+            <mat-form-field color="accent" appearance="outline" class="table-filter">
+              <mat-label>Szukaj</mat-label>
+              <input matInput (keyup)="applyFilter($event)">
+            </mat-form-field>
+          </th>
+        </ng-container>
+
+        <ng-container matColumnDef="post">
+          <td mat-cell [colSpan]="columns.length" *matCellDef="let element" class="entry-table-cell no-border"
+              [ngClass]="{'entry-table-cell-tablet': global.isScreenSmall || global.isScreenMedium}">
+            <mat-card [ngClass]="{'entry-card-dark': global.isDarkMode}" class="entry-card post-card mat-elevation-z4"
+                      [routerLink]="['/post', element.id]">
+              <mat-card-header [ngClass]="{'imageless-header': !teacher?.pictureUrl}">
+                <img mat-card-avatar *ngIf="!!teacher?.pictureUrl" [src]="teacher?.pictureUrl" alt="avatar">
+                <mat-card-title>{{element.title}}</mat-card-title>
+                <mat-card-subtitle>{{element.subtitle}}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <span class="post-date">{{element.date | date:'fullDate'}}</span>
+              </mat-card-content>
+              <mat-card-actions @easeInOutVerticalEditingContainer *ngIf="global.canEdit()"
+                                (@easeInOutVerticalEditingContainer.done)="global.areAnimationsDisabled = true; changeDetectorRef.detectChanges();"
+                                class="entry-edit-buttons-container" (click)="$event.stopPropagation()"
+                                [ngClass]="{'entry-edit-buttons-container-dark': global.isDarkMode}">
+                <span class="auto-spacer"></span>
+                <button @easeInOutEditingButton mat-raised-button color="accent" [routerLink]="['/post', element.id]"
+                        class="button" [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+                        [matTooltip]="global.isScreenSmall ? 'Edytuj' : null">
+                  <mat-icon>{{global.operations.Edit}}</mat-icon>
+                  <span class="button-text">Edytuj</span>
+                </button>
+                <span class="auto-spacer"></span>
+                <button @easeInOutEditingButton mat-raised-button color="accent" (click)="deletePost(element)"
+                        class="button" [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
+                        [matTooltip]="global.isScreenSmall ? 'Usuń' : null">
+                  <mat-icon>{{global.operations.Delete}}</mat-icon>
+                  <span class="button-text">Usuń</span>
+                </button>
+                <span class="auto-spacer"></span>
+              </mat-card-actions>
+            </mat-card>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columns" class="table-header-row"
+            [ngClass]="{'table-header-row-dark': global.isDarkMode}"></tr>
+        <tr mat-header-row *matHeaderRowDef="['filter']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['post'];"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell entry-table-cell" *ngIf="filterValue.length !== 0" [colSpan]="columns.length"
+              [ngClass]="{'entry-table-cell-tablet': global.isScreenSmall || global.isScreenMedium}">
+            <span>Nie znaleziono "{{filterValue}}"</span>
+          </td>
+        </tr>
+      </table>
+      <mat-paginator *ngIf="postsDataSource.filteredData.length !== 0" color="accent" class="paginator entry-paginator"
+                     [ngClass]="{'paginator-dark': global.isDarkMode, 'entry-paginator-tablet': global.isScreenSmall || global.isScreenMedium}"
+                     [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+  </div>
+</div>

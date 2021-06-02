@@ -1,0 +1,6 @@
+@import '~src/colors';
+
+:host {
+  @extend .flex-column-centered-container;
+  @extend .fill;
+}
