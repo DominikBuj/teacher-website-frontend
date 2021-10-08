@@ -21,8 +21,8 @@ export class Constants {
   public static readonly SITE_LOGO_LIGHT_URL = Constants.ICONS_URL + '/site_logo_light.png';
   public static readonly SITE_LOGO_DARK_URL = Constants.ICONS_URL + '/site_logo_dark.png';
 
-  public static readonly LINKED_IN_CLIENT_ID = '78h24m4vkdn1aw';
-  public static readonly LINKED_IN_CLIENT_SECRET = '3pARoUqmqjWybkZc';
+  public static readonly LINKED_IN_CLIENT_ID = '782gsavfid0nxq';
+  public static readonly LINKED_IN_CLIENT_SECRET = 'if6eq53IDUDu8GFG';
   public static readonly LINKED_IN_REDIRECT_URI = 'https://localhost:4200/profile/';
   public static readonly LINKED_IN_SCOPE = 'r_liteprofile%20r_emailaddress';
   public static readonly LINKED_IN_STATE = 'zBbc0Xvsbu';
@@ -55,8 +55,8 @@ export class Constants {
   public static readonly OPERATION = Operation;
   public static readonly DISSERTATION_STATUS = DissertationStatus;
   public static readonly DISSERTATION_STATUS_LABELS = new Map<string, string>([
-    [DissertationStatus.Proposed.toString(), 'Proponowane'],
-    [DissertationStatus.InProgress.toString(), 'W realizacji'],
-    [DissertationStatus.Completed.toString(), 'Ukończone']
+    [DissertationStatus.Proposed.toString(), 'Proposed'],
+    [DissertationStatus.InProgress.toString(), 'In progress'],
+    [DissertationStatus.Completed.toString(), 'Completed']
   ]);
 }

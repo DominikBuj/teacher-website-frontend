@@ -5,7 +5,7 @@ import {LoggerService} from './logger.service';
 import {HttpClient} from '@angular/common/http';
 import {Constants} from '../constants';
 import {catchError, tap} from 'rxjs/operators';
-import {Post} from '../_models/post.model';
+import {Post} from '../_entities/post.model';
 
 @Injectable({
   providedIn: 'root'

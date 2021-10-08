@@ -1,6 +1,6 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {DissertationStatus} from '../../_models/dissertation-status.enum';
-import {Dissertation} from '../../_models/dissertation.model';
+import {Dissertation} from '../../_entities/dissertation.model';
 import {MatDialog} from '@angular/material/dialog';
 import {GlobalService} from '../../_services/global.service';
 import {DissertationService} from '../../_services/dissertation.service';
@@ -8,7 +8,6 @@ import {KeyValue} from '@angular/common';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {Observable, of} from 'rxjs';
 import {DissertationEditDialogComponent} from './dissertation-edit-dialog/dissertation-edit-dialog.component';
 import {FunctionsService} from '../../_services/functions.service';
 import {Animations} from '../../_helpers/animations';
@@ -26,7 +25,6 @@ import {Animations} from '../../_helpers/animations';
 export class DissertationsComponent implements OnInit, AfterViewInit {
   @ViewChildren(MatPaginator) paginators: QueryList<MatPaginator>;
   @ViewChildren(MatSort) sorts: QueryList<MatSort>;
-  dissertations: Map<string, Observable<Dissertation[]>>;
   dissertationsDataSources: Map<string, MatTableDataSource<Dissertation>>;
   expandedDissertation: Dissertation = null;
   highlightedDissertation: Dissertation = null;
@@ -45,6 +43,8 @@ export class DissertationsComponent implements OnInit, AfterViewInit {
     [DissertationStatus.InProgress.toString(), ''],
     [DissertationStatus.Completed.toString(), '']
   ]);
+  dissertationStatuses = Object.keys(DissertationStatus);
+  dissertationStatusValues = this.dissertationStatuses.splice(0, this.dissertationStatuses.length / 2);
 
   constructor(
     private dialog: MatDialog,
@@ -55,11 +55,7 @@ export class DissertationsComponent implements OnInit, AfterViewInit {
   ) {
     this.paginators = new QueryList<MatPaginator>();
     this.sorts = new QueryList<MatSort>();
-    this.dissertations = new Map<string, Observable<Dissertation[]>>([
-      [DissertationStatus.Proposed.toString(), of([])],
-      [DissertationStatus.InProgress.toString(), of([])],
-      [DissertationStatus.Completed.toString(), of([])]
-    ]);
+
     this.dissertationsDataSources = new Map<string, MatTableDataSource<Dissertation>>([
       [DissertationStatus.Proposed.toString(), new MatTableDataSource<Dissertation>([])],
       [DissertationStatus.InProgress.toString(), new MatTableDataSource<Dissertation>([])],
@@ -68,33 +64,27 @@ export class DissertationsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    let index = 0;
-    let dissertationStatusKeys = Object.keys(DissertationStatus);
-    dissertationStatusKeys = dissertationStatusKeys.splice(0, dissertationStatusKeys.length / 2);
-
-    for (const dissertationStatus of dissertationStatusKeys) {
-      const dissertationDataSource = this.dissertationsDataSources.get(dissertationStatus);
-      let dissertation = this.dissertations.get(dissertationStatus);
-      dissertationDataSource.paginator = this.paginators.toArray()[index];
-      dissertationDataSource.sort = this.sorts.toArray()[index];
-      ++index;
-      dissertation = dissertationDataSource.connect();
-    }
-
     this.dissertationService.dissertations.subscribe((dissertations: Dissertation[]) => {
-      if (dissertations.length > 0) {
-        for (const dissertationStatus of dissertationStatusKeys) {
-          const dissertationDataSource = this.dissertationsDataSources.get(dissertationStatus);
-          dissertationDataSource.data = dissertations.filter((dissertation: Dissertation) => {
-            return dissertation.status === this.global.dissertationStatuses[dissertationStatus];
-          });
-          dissertationDataSource._updateChangeSubscription();
-        }
+      for (const dissertationStatus of this.dissertationStatusValues) {
+        const dissertationDataSource = this.dissertationsDataSources.get(dissertationStatus);
+        dissertationDataSource.data = dissertations.filter((dissertation: Dissertation) => {
+          return dissertation.status === this.global.dissertationStatuses[dissertationStatus];
+        });
+        dissertationDataSource._updateChangeSubscription();
       }
     });
   }
 
   ngAfterViewInit(): void {
+    let index = 0;
+
+    for (const dissertationStatus of this.dissertationStatusValues) {
+      const dissertationDataSource = this.dissertationsDataSources.get(dissertationStatus);
+      dissertationDataSource.paginator = this.paginators.toArray()[index];
+      dissertationDataSource.sort = this.sorts.toArray()[index];
+      ++index;
+    }
+
     this.changeDetectorRef.detectChanges();
   }
 

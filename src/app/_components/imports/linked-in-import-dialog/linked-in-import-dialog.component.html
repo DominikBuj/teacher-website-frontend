@@ -17,17 +17,17 @@
       </ng-container>
 
       <ng-container matColumnDef="parameterLabel">
-        <th mat-header-cell *matHeaderCellDef>Nazwa</th>
+        <th mat-header-cell *matHeaderCellDef>Label</th>
         <td mat-cell *matCellDef="let element">{{element.parameterLabel}}</td>
       </ng-container>
 
       <ng-container matColumnDef="oldParameter">
-        <th mat-header-cell *matHeaderCellDef>Stare</th>
+        <th mat-header-cell *matHeaderCellDef>Old</th>
         <td mat-cell *matCellDef="let element">{{element.oldParameter}}</td>
       </ng-container>
 
       <ng-container matColumnDef="newParameter">
-        <th mat-header-cell *matHeaderCellDef>Nowe</th>
+        <th mat-header-cell *matHeaderCellDef>New</th>
         <td mat-cell *matCellDef="let element">{{element.newParameter}}</td>
       </ng-container>
 
@@ -38,9 +38,9 @@
   <div class="dialog-actions">
     <button mat-raised-button color="accent" type="button" class="button" (click)="onSubmit()"
             [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-            [matTooltip]="global.isScreenSmall ? 'Importuj' : null">
+            [matTooltip]="global.isScreenSmall ? 'Import' : null">
       <mat-icon>{{global.operations.Add}}</mat-icon>
-      <span class="button-text">Importuj</span>
+      <span class="button-text">Import</span>
     </button>
   </div>
 </div>

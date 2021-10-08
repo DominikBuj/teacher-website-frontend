@@ -48,12 +48,19 @@ export class LinkedInImportDialogComponent implements OnInit, OnDestroy {
                 emailAddress: _.get(email, 'elements[0].handle~.emailAddress')?.toString()
               } as Teacher;
               this.dataSource.data = [
-                {parameterLabel: 'Imię', parameterName: 'firstName', oldParameter: oldData.firstName, newParameter: newData.firstName},
-                {parameterLabel: 'Nazwisko', parameterName: 'lastName', oldParameter: oldData.lastName, newParameter: newData.lastName},
-                {parameterLabel: 'Zdjęcie Url', parameterName: 'pictureUrl', oldParameter: oldData.pictureUrl,
-                  newParameter: newData.pictureUrl},
-                {parameterLabel: 'Adres Email', parameterName: 'emailAddress', oldParameter: oldData.emailAddress,
-                  newParameter: newData.emailAddress}
+                {
+                  parameterLabel: 'First name', parameterName: 'firstName', oldParameter: oldData.firstName,
+                  newParameter: newData.firstName
+                },
+                {parameterLabel: 'Last name', parameterName: 'lastName', oldParameter: oldData.lastName, newParameter: newData.lastName},
+                {
+                  parameterLabel: 'Profile picture url', parameterName: 'pictureUrl', oldParameter: oldData.pictureUrl,
+                  newParameter: newData.pictureUrl
+                },
+                {
+                  parameterLabel: 'Email address', parameterName: 'emailAddress', oldParameter: oldData.emailAddress,
+                  newParameter: newData.emailAddress
+                }
               ];
               this.changeDetectorRef.detectChanges();
             });

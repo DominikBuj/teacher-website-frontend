@@ -5,7 +5,7 @@ import {LinksPanelComponent} from '../links-panel.component';
 import {Operation} from '../../../_models/operation.enum';
 import {FunctionsService} from '../../../_services/functions.service';
 import {LinkType} from '../../../_models/link-type.enum';
-import {Link} from '../../../_models/link.model';
+import {Link} from '../../../_entities/link.model';
 import {GlobalService} from '../../../_services/global.service';
 import {LinkService} from '../../../_services/link.service';
 
@@ -40,11 +40,11 @@ export class LinkEditDialogComponent implements OnInit {
 
     this.linkForm = this.formBuilder.group({
       type: [this.link?.type, [Validators.required]],
-      name: [
-        {value: this.link?.name, disabled: this.link?.type !== LinkType[LinkType.Other]},
-        [Validators.required, Validators.maxLength(100)]
+      typeName: [
+        {value: this.link?.typeName, disabled: this.link?.type !== LinkType[LinkType.Other]},
+        [Validators.required, Validators.maxLength(128)]
       ],
-      url: [this.link?.url, [Validators.required, Validators.maxLength(2000)]]
+      url: [this.link?.url, [Validators.required, Validators.maxLength(2048)]]
     });
   }
 
@@ -67,10 +67,10 @@ export class LinkEditDialogComponent implements OnInit {
 
   updateNameDisabled(linkType: string): void {
     if (linkType === LinkType[LinkType.Other]) {
-      this.linkForm.controls.name.enable();
+      this.linkForm.controls.typeName.enable();
     } else {
-      this.linkForm.patchValue({name: linkType});
-      this.linkForm.controls.name.disable();
+      this.linkForm.patchValue({typeName: linkType});
+      this.linkForm.controls.typeName.disable();
     }
   }
 }

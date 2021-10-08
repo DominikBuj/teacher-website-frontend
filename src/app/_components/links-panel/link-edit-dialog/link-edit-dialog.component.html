@@ -3,44 +3,45 @@
   <div class="dialog-content">
     <div class="input-container" [ngClass]="{'input-container-row': global.isScreenLarge || global.isScreenVeryLarge}">
       <mat-form-field appearance="fill" color="accent">
-        <mat-label>Rodzaj</mat-label>
+        <mat-label>Type</mat-label>
         <mat-select formControlName="type" (ngModelChange)="updateNameDisabled($event)" required>
-          <mat-option *ngFor="let linkType of availableLinkTypes"
-                      [value]="linkType">{{global.linkTypeLabels.get(global.linkTypes[linkType].toString())}}</mat-option>
+          <mat-option *ngFor="let linkType of availableLinkTypes" [value]="linkType">
+            {{global.linkTypeLabels.get(global.linkTypes[linkType].toString())}}
+          </mat-option>
         </mat-select>
       </mat-form-field>
       <span class="auto-spacer"></span>
       <mat-form-field appearance="fill" color="accent">
-        <mat-label>Nazwa</mat-label>
-        <input #name matInput type="text" formControlName="name" required>
-        <mat-hint align="end">{{name.value.length}} / 100</mat-hint>
-        <mat-error *ngIf="functions.checkError(linkForm, 'name', 'required')">
-          Nazwa jest <strong>wymagana</strong>
+        <mat-label>Type name</mat-label>
+        <input #typeName matInput type="text" formControlName="typeName" required>
+        <mat-hint align="end">{{typeName.value.length}} / 128</mat-hint>
+        <mat-error *ngIf="functions.checkError(linkForm, 'typeName', 'required')">
+          The type name field is <strong>required</strong>
         </mat-error>
-        <mat-error *ngIf="functions.checkError(linkForm, 'name', 'maxlength')">
-          Nazwa może maksymalnie mieć długość <strong>100</strong> znaków
+        <mat-error *ngIf="functions.checkError(linkForm, 'typeName', 'maxlength')">
+          Please enter no more than <strong>128</strong> characters
         </mat-error>
       </mat-form-field>
     </div>
     <mat-form-field appearance="fill" color="accent">
       <mat-label>Url</mat-label>
       <input #url matInput type="url" formControlName="url" required>
-      <mat-hint align="end">{{url.value.length}} / 2000</mat-hint>
+      <mat-hint align="end">{{url.value.length}} / 2048</mat-hint>
       <mat-error *ngIf="functions.checkError(linkForm, 'url', 'required')">
-        Url jest <strong>wymagane</strong>
+        The url field is <strong>required</strong>
       </mat-error>
       <mat-error *ngIf="functions.checkError(linkForm, 'url', 'maxlength')">
-        Url może maksymalnie mieć długość <strong>2000</strong> znaków
+        Please enter no more than <strong>2048</strong> characters
       </mat-error>
     </mat-form-field>
   </div>
   <div class="dialog-actions">
     <button mat-raised-button color="accent" type="submit" class="button"
             [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-            [matTooltip]="global.isScreenSmall ? operation === global.operations.Add ? 'Dodaj' : 'Zapisz' : null">
+            [matTooltip]="global.isScreenSmall ? operation === global.operations.Add ? 'Add' : 'Save' : null">
       <mat-icon>{{operation}}</mat-icon>
-      <span *ngIf="operation === global.operations.Add; else save" class="button-text">Dodaj</span>
-      <ng-template #save><span class="button-text">Zapisz</span></ng-template>
+      <span *ngIf="operation === global.operations.Add; else save" class="button-text">Add</span>
+      <ng-template #save><span class="button-text">Save</span></ng-template>
     </button>
   </div>
 </form>

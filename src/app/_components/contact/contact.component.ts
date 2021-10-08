@@ -7,7 +7,7 @@ import {FunctionsService} from '../../_services/functions.service';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {CalendarEditDialogComponent} from './calendar-edit-dialog/calendar-edit-dialog.component';
 import {LinkService} from '../../_services/link.service';
-import {Link} from '../../_models/link.model';
+import {Link} from '../../_entities/link.model';
 import {filter} from 'rxjs/operators';
 
 @Component({
@@ -34,7 +34,7 @@ export class ContactComponent implements OnInit, AfterViewInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {
     this.teacherContactForm = this.formBuilder.group({
-      emailAddress: [this.teacher?.emailAddress, [Validators.email, Validators.maxLength(400)]],
+      emailAddress: [this.teacher?.emailAddress, [Validators.email, Validators.maxLength(256)]],
       phoneNumber: [this.teacher?.phoneNumber, [Validators.maxLength(16)]]
     });
   }

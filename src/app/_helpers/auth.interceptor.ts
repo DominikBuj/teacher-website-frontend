@@ -12,7 +12,7 @@ export class AuthInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    /* Adds the JWT bearer token to the request if the user is logged in and the request is coming from the back end */
+    /* Adds the JWT bearer token to the request if the user is logged in and the request is directed to the backend */
 
     const user = this.auth.user.value;
     const isLoggedIn = user && user.token;

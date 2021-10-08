@@ -4,7 +4,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {GlobalService} from '../../_services/global.service';
 import {TeacherService} from '../../_services/teacher.service';
-import {Post} from '../../_models/post.model';
+import {Post} from '../../_entities/post.model';
 import {PostService} from '../../_services/post.service';
 import {Animations} from '../../_helpers/animations';
 import {MatSort} from '@angular/material/sort';

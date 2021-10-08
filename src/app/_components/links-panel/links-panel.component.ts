@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Link} from '../../_models/link.model';
+import {Link} from '../../_entities/link.model';
 import {MatDialog} from '@angular/material/dialog';
 import {LinkEditDialogComponent} from './link-edit-dialog/link-edit-dialog.component';
 import {LinkType} from '../../_models/link-type.enum';
@@ -102,7 +102,7 @@ export class LinksPanelComponent implements OnInit {
       link: {
         id: link.id,
         type: link.type,
-        name: link.name,
+        typeName: link.typeName,
         url: link.url,
         iconUrl: link.iconUrl,
         color: link.color

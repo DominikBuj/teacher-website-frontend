@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Constants} from '../constants';
 import {catchError, tap} from 'rxjs/operators';
-import {Publication} from '../_models/publication.model';
+import {Publication} from '../_entities/publication.model';
 import {FunctionsService} from './functions.service';
 
 @Injectable({

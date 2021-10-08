@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AuthService} from '../../_services/auth.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {FunctionsService} from '../../_services/functions.service';
 
 @Component({
   selector: 'app-login',
@@ -19,14 +20,15 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    public functions: FunctionsService
   ) {
   }
 
   ngOnInit(): void {
     const currentUser = this.authService.user.value;
     if (!!currentUser) {
-      this.snackBar.open(`Już zalogowano jako ${currentUser.username}`, 'Zamknij', {duration: 2000});
+      this.snackBar.open(`Already logged in as ${currentUser.username}`, 'Close', {duration: 2000});
       this.router.navigateByUrl('');
     }
 

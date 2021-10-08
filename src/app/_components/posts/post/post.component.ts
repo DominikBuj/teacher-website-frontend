@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {GlobalService} from '../../../_services/global.service';
-import {Post} from '../../../_models/post.model';
+import {Post} from '../../../_entities/post.model';
 import {PostService} from '../../../_services/post.service';
 import {Operation} from '../../../_models/operation.enum';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -45,9 +45,9 @@ export class PostComponent implements OnInit {
 
   ngOnInit(): void {
     this.postForm = this.formBuilder.group({
-      title: [this.post?.title, [Validators.required, Validators.maxLength(200)]],
-      subtitle: [this.post?.subtitle, [Validators.maxLength(200)]],
-      content: [this.post?.content, [Validators.required, Validators.maxLength(4000)]]
+      title: [this.post?.title, [Validators.required, Validators.maxLength(256)]],
+      subtitle: [this.post?.subtitle, [Validators.maxLength(256)]],
+      content: [this.post?.content, [Validators.required, Validators.maxLength(4096)]]
     });
 
     this.route.params.subscribe((params: Params) => {
@@ -92,6 +92,7 @@ export class PostComponent implements OnInit {
 
     if (!!temporaryFile.file) {
       this.fileService.uploadFile(temporaryFile.file).subscribe((fileSaveResponse: FileSaveResponse) => {
+        console.log(fileSaveResponse);
         savedFile.url = fileSaveResponse.databasePath;
         savedFiles.push(savedFile);
         this.saveTemporaryFile(savedFiles, index, post);

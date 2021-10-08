@@ -1,4 +1,4 @@
-import {Post} from './post.model';
+import {Post} from '../_entities/post.model';
 
 export interface SavedFile {
   id: number;

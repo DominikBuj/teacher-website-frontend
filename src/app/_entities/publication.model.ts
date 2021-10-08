@@ -4,6 +4,7 @@ export interface Publication {
   subtitle: string;
   publisher: string;
   type: string;
+  typeName: string;
   url: string;
   date: number;
 }

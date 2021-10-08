@@ -1,7 +1,7 @@
 export interface Link {
   id: number;
   type: string;
-  name: string;
+  typeName: string;
   url: string;
   iconUrl: string;
   color: string;

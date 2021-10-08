@@ -1,21 +1,25 @@
 <div class="login-container">
   <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <h1 class="login-form-header">Zaloguj się</h1>
+    <h1 class="login-form-header">Log In</h1>
     <mat-form-field appearance="outline" color="accent">
-      <mat-label>Nazwa Użytkownika</mat-label>
+      <mat-label>Username</mat-label>
       <input type="text" matInput formControlName="username">
-      <mat-error *ngIf="submitted && loginForm.controls.username.errors?.required">Nazwa użytkownika jest wymagana</mat-error>
+      <mat-error *ngIf="functions.checkError(loginForm, 'username', 'required')">
+        The username field is <strong>required</strong>
+      </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline" color="accent">
-      <mat-label>Hasło</mat-label>
+      <mat-label>Password</mat-label>
       <input matInput autocomplete="off" [type]="hidePassword ? 'password' : 'text'" formControlName="password">
       <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
         <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
-      <mat-error *ngIf="submitted && loginForm.controls.password.errors?.required">Hasło jest wymagane</mat-error>
+      <mat-error *ngIf="functions.checkError(loginForm, 'password', 'required')">
+        The password field is <strong>required</strong>
+      </mat-error>
     </mat-form-field>
     <button mat-raised-button type="submit" color="accent">
-      <span>Zaloguj się</span>
+      <span>Sign In</span>
     </button>
   </form>
 </div>

@@ -8,47 +8,47 @@
           <span class="auto-spacer"></span>
           <a mat-raised-button routerLink="posts" color="accent" class="button"
              [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-             [matTooltip]="global.isScreenSmall ? 'Cofnij' : null">
+             [matTooltip]="global.isScreenSmall ? 'Return' : null">
             <mat-icon>{{global.operations.GoBack}}</mat-icon>
-            <span class="button-text">Cofnij</span>
+            <span class="button-text">Return</span>
           </a>
           <span class="auto-spacer"></span>
           <button mat-raised-button color="accent" type="submit" class="button"
                   [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-                  [matTooltip]="global.isScreenSmall ? operation === global.operations.Add ? 'Dodaj' : 'Zapisz' : null">
+                  [matTooltip]="global.isScreenSmall ? operation === global.operations.Add ? 'Add' : 'Save' : null">
             <mat-icon>{{operation}}</mat-icon>
-            <span *ngIf="operation === global.operations.Add; else save" class="button-text">Dodaj</span>
-            <ng-template #save><span class="button-text">Zapisz</span></ng-template>
+            <span *ngIf="operation === global.operations.Add; else save" class="button-text">Add</span>
+            <ng-template #save><span class="button-text">Save</span></ng-template>
           </button>
           <span class="auto-spacer"></span>
           <ng-container *ngIf="operation === global.operations.Save">
             <button mat-raised-button color="accent" (click)="deletePost(post)" class="button"
                     [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-                    [matTooltip]="global.isScreenSmall ? 'Usuń' : null">
+                    [matTooltip]="global.isScreenSmall ? 'Delete' : null">
               <mat-icon>{{global.operations.Delete}}</mat-icon>
-              <span class="button-text">Usuń</span>
+              <span class="button-text">Delete</span>
             </button>
             <span class="auto-spacer"></span>
           </ng-container>
         </div>
         <div class="post-edit-container">
           <mat-form-field appearance="fill" color="accent">
-            <mat-label>Tytuł</mat-label>
+            <mat-label>Title</mat-label>
             <input #title type="text" matInput formControlName="title" required>
-            <mat-hint align="end">{{title.value.length}} / 200</mat-hint>
+            <mat-hint align="end">{{title.value.length}} / 256</mat-hint>
             <mat-error *ngIf="functions.checkError(postForm, 'title', 'required')">
-              Tytuł jest <strong>wymagany</strong>
+              The title field is <strong>required</strong>
             </mat-error>
             <mat-error *ngIf="functions.checkError(postForm, 'title', 'maxlength')">
-              Tytuł może maksymalnie mieć długość <strong>200</strong> znaków
+              Please enter no more than <strong>256</strong> characters
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="fill" color="accent">
-            <mat-label>Podtytuł</mat-label>
+            <mat-label>Subtitle</mat-label>
             <input #subtitle type="text" matInput formControlName="subtitle">
-            <mat-hint align="end">{{subtitle.value.length}} / 200</mat-hint>
+            <mat-hint align="end">{{subtitle.value.length}} / 256</mat-hint>
             <mat-error *ngIf="functions.checkError(postForm, 'subtitle', 'maxlength')">
-              Podtytuł może maksymalnie mieć długość <strong>200</strong> znaków
+              Please enter no more than <strong>256</strong> characters
             </mat-error>
           </mat-form-field>
           <div class="ckeditor-container">
@@ -63,7 +63,7 @@
               <h1 class="post-title">{{post.title}}</h1>
               <h2 class="post-subtitle">{{post.subtitle}}</h2>
             </div>
-            <button mat-icon-button color="accent" routerLink="posts" matTooltip="Cofnij" class="back-button">
+            <button mat-icon-button color="accent" routerLink="posts" matTooltip="Return" class="back-button">
               <mat-icon>{{global.operations.GoBack}}</mat-icon>
             </button>
           </div>
@@ -82,18 +82,18 @@
     <div class="files-list-container" [ngClass]="{'files-list-container-dark': global.isDarkMode}">
       <mat-grid-list [cols]="global.isScreenSmall || global.isScreenMedium ? 2 : 4" rowHeight="64px">
         <mat-grid-tile>
-          <h1 class="files-list-header">Załączone Pliki</h1>
+          <h1 class="files-list-header">Attached files</h1>
         </mat-grid-tile>
         <mat-grid-tile *ngFor="let column of getFilesListColumnsArray()"></mat-grid-tile>
         <mat-grid-tile *ngFor="let temporaryFile of temporaryFiles" [ngClass]="{'editable-file': global.canEdit()}">
           <span class="file-name">{{temporaryFile.name}}</span>
           <div class="file-edit-panel" [ngClass]="{'file-edit-panel-dark': global.isDarkMode}">
             <button mat-mini-fab color="accent" type="button" (click)="replaceTemporaryFile(temporaryFile)"
-                    style="margin: 8px 4px 8px 8px;" matTooltip="Edytuj">
+                    style="margin: 8px 4px 8px 8px;" matTooltip="Edit">
               <mat-icon>{{global.operations.Edit}}</mat-icon>
             </button>
             <button mat-mini-fab color="accent" type="button" (click)="deleteTemporaryFile(temporaryFile)"
-                    style="margin: 8px 8px 8px 4px;" matTooltip="Usuń">
+                    style="margin: 8px 8px 8px 4px;" matTooltip="Delete">
               <mat-icon>{{global.operations.Delete}}</mat-icon>
             </button>
           </div>
@@ -102,11 +102,11 @@
           <a mat-button color="accent" class="file-name" target="_blank" [href]="savedFile.url">{{savedFile.name}}</a>
           <div class="file-edit-panel" [ngClass]="{'file-edit-panel-dark': global.isDarkMode}">
             <button mat-mini-fab color="accent" type="button" (click)="replaceSavedFile(savedFile)"
-                    style="margin: 8px 4px 8px 8px;" matTooltip="Edytuj">
+                    style="margin: 8px 4px 8px 8px;" matTooltip="Edit">
               <mat-icon>{{global.operations.Edit}}</mat-icon>
             </button>
             <button mat-mini-fab color="accent" type="button" (click)="deleteSavedFile(savedFile)"
-                    style="margin: 8px 8px 8px 4px;" matTooltip="Usuń">
+                    style="margin: 8px 8px 8px 4px;" matTooltip="Delete">
               <mat-icon>{{global.operations.Delete}}</mat-icon>
             </button>
           </div>
@@ -114,9 +114,9 @@
         <mat-grid-tile *ngIf="global.canEdit()">
           <button mat-raised-button color="accent" type="button" (click)="addFile()" class="button"
                   [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-                  [matTooltip]="global.isScreenSmall ? 'Dodaj' : null">
+                  [matTooltip]="global.isScreenSmall ? 'Add' : null">
             <mat-icon>{{global.operations.Add}}</mat-icon>
-            <span class="button-text">Dodaj</span>
+            <span class="button-text">Add</span>
           </button>
         </mat-grid-tile>
       </mat-grid-list>

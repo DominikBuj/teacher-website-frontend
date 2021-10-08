@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Link} from '../_models/link.model';
+import {Link} from '../_entities/link.model';
 import {LoggerService} from './logger.service';
 import {HttpClient} from '@angular/common/http';
 import {Constants} from '../constants';

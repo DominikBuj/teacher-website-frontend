@@ -17,6 +17,18 @@
   }
 }
 
+.picture-edit-panel {
+  @extend .flex-column-centered-container;
+  display: none;
+  @extend .border-light;
+  @extend .card-background-color-light;
+
+  &-dark {
+    @extend .border-dark;
+    @extend .card-background-color-dark;
+  }
+}
+
 .teacher-picture-container {
   grid-area: teacher-picture-container;
   @extend .flex-column-centered-container;
@@ -36,10 +48,6 @@
       display: none;
     }
 
-    button {
-      display: none;
-    }
-
     img {
       width: 100%;
       height: 100%;
@@ -50,7 +58,7 @@
       &.has-image:hover {
         cursor: pointer;
 
-        button {
+        .picture-edit-panel {
           position: absolute;
           display: inline-block;
         }
@@ -60,9 +68,10 @@
         }
       }
 
-      &:not(.has-image) button {
+      &:not(.has-image) .picture-edit-panel {
         position: absolute;
         display: inline-block;
+        border: 0;
       }
     }
   }

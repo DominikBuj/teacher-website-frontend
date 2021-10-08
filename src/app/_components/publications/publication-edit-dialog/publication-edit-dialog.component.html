@@ -1,70 +1,84 @@
 <form mat-dialog-content class="dialog-container" autocomplete="off" [formGroup]="publicationForm"
       (ngSubmit)="onSubmit()">
-  <h1 class="dialog-title">Publikacje</h1>
+  <h1 class="dialog-title">Publication</h1>
   <div class="dialog-content">
     <mat-form-field appearance="fill" color="accent">
-      <mat-label>Tytuł</mat-label>
+      <mat-label>Title</mat-label>
       <input #title type="text" matInput formControlName="title" required>
-      <mat-hint align="end">{{title.value.length}} / 200</mat-hint>
+      <mat-hint align="end">{{title.value.length}} / 256</mat-hint>
       <mat-error *ngIf="functions.checkError(publicationForm, 'title', 'required')">
-        Tytuł jest <strong>wymagany</strong>
+        The title field is <strong>required</strong>
       </mat-error>
       <mat-error *ngIf="functions.checkError(publicationForm, 'title', 'maxlength')">
-        Tytuł może maksymalnie mieć długość <strong>200</strong> znaków
+        Please enter no more than <strong>256</strong> characters
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="fill" color="accent">
-      <mat-label>Podtytuł</mat-label>
+      <mat-label>Subtitle</mat-label>
       <input #subtitle type="text" matInput formControlName="subtitle">
-      <mat-hint align="end">{{subtitle.value.length}} / 200</mat-hint>
+      <mat-hint align="end">{{subtitle.value.length}} / 256</mat-hint>
       <mat-error *ngIf="functions.checkError(publicationForm, 'subtitle', 'maxlength')">
-        Podtytuł może maksymalnie mieć długość <strong>200</strong> znaków
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="fill" color="accent">
-      <mat-label>Rodzaj</mat-label>
-      <input #type type="text" matInput formControlName="type" required>
-      <mat-hint align="end">{{type.value.length}} / 100</mat-hint>
-      <mat-error *ngIf="functions.checkError(publicationForm, 'type', 'required')">
-        Rodzaj jest <strong>wymagany</strong>
-      </mat-error>
-      <mat-error *ngIf="functions.checkError(publicationForm, 'type', 'maxlength')">
-        Rodzaj może maksymalnie mieć długość <strong>100</strong> znaków
+        Please enter no more than <strong>256</strong> characters
       </mat-error>
     </mat-form-field>
     <div class="input-container" [ngClass]="{'input-container-row': global.isScreenLarge || global.isScreenVeryLarge}">
       <mat-form-field appearance="fill" color="accent">
-        <mat-label>Wydawca</mat-label>
-        <input #publisher type="text" matInput formControlName="publisher">
-        <mat-hint align="end">{{publisher.value.length}} / 100</mat-hint>
-        <mat-error *ngIf="functions.checkError(publicationForm, 'publisher', 'maxlength')">
-          Wydawca może maksymalnie mieć długość <strong>100</strong> znaków
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type" (ngModelChange)="updatePublicationTypeDisabled($event)" required>
+          <mat-option *ngFor="let publicationType of global.publicationTypes | enumKeys" [value]="publicationType">
+            {{global.publicationTypeLabels.get(global.publicationTypes[publicationType].toString())}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="functions.checkError(publicationForm, 'type', 'required')">
+          The type field is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <span class="auto-spacer"></span>
       <mat-form-field appearance="fill" color="accent">
-        <mat-label>Wybierz datę</mat-label>
+        <mat-label>Type name</mat-label>
+        <input #typeName type="text" matInput formControlName="typeName">
+        <mat-hint align="end">{{typeName.value.length}} / 128</mat-hint>
+        <mat-error *ngIf="functions.checkError(publicationForm, 'typeName', 'required')">
+          The type name field is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="functions.checkError(publicationForm, 'typeName', 'maxlength')">
+          Please enter no more than <strong>128</strong> characters
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="input-container" [ngClass]="{'input-container-row': global.isScreenLarge || global.isScreenVeryLarge}">
+      <mat-form-field appearance="fill" color="accent">
+        <mat-label>Publisher</mat-label>
+        <input #publisher type="text" matInput formControlName="publisher">
+        <mat-hint align="end">{{publisher.value.length}} / 128</mat-hint>
+        <mat-error *ngIf="functions.checkError(publicationForm, 'publisher', 'maxlength')">
+          Please enter no more than <strong>128</strong> characters
+        </mat-error>
+      </mat-form-field>
+      <span class="auto-spacer"></span>
+      <mat-form-field appearance="fill" color="accent">
+        <mat-label>Date of publication</mat-label>
         <input matInput [max]="maxDate" [matDatepicker]="picker" formControlName="date">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
     </div>
     <mat-form-field appearance="fill" color="accent">
-      <mat-label>Link</mat-label>
+      <mat-label>Url</mat-label>
       <input #url type="url" matInput formControlName="url">
-      <mat-hint align="end">{{url.value.length}} / 2000</mat-hint>
+      <mat-hint align="end">{{url.value.length}} / 2048</mat-hint>
       <mat-error *ngIf="functions.checkError(publicationForm, 'url', 'maxlength')">
-        Link może maksymalnie mieć długość <strong>2000</strong> znaków
+        Please enter no more than <strong>2048</strong> characters
       </mat-error>
     </mat-form-field>
   </div>
   <div class="dialog-actions">
     <button mat-raised-button color="accent" type="submit" class="button"
             [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-            [matTooltip]="global.isScreenSmall ? operation === global.operations.Add ? 'Dodaj' : 'Zapisz' : null">
+            [matTooltip]="global.isScreenSmall ? operation === global.operations.Add ? 'Add' : 'Save' : null">
       <mat-icon>{{operation}}</mat-icon>
-      <span *ngIf="operation === global.operations.Add; else save" class="button-text">Dodaj</span>
-      <ng-template #save><span class="button-text">Zapisz</span></ng-template>
+      <span *ngIf="operation === global.operations.Add; else save" class="button-text">Add</span>
+      <ng-template #save><span class="button-text">Save</span></ng-template>
     </button>
   </div>
 </form>

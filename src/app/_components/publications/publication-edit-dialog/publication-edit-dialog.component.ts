@@ -2,11 +2,12 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {Operation} from '../../../_models/operation.enum';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {PublicationsComponent} from '../publications.component';
-import {Publication} from '../../../_models/publication.model';
+import {Publication} from '../../../_entities/publication.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {GlobalService} from '../../../_services/global.service';
 import {PublicationService} from '../../../_services/publication.service';
 import {FunctionsService} from '../../../_services/functions.service';
+import {PublicationType} from '../../../_models/publication-type.enum';
 
 @Component({
   selector: 'app-publication-edit-dialog',
@@ -35,11 +36,15 @@ export class PublicationEditDialogComponent implements OnInit {
     this.operation = !!this.publication?.id ? Operation.Save : Operation.Add;
 
     this.publicationForm = this.formBuilder.group({
-      title: [this.publication?.title, [Validators.required, Validators.maxLength(200)]],
-      subtitle: [this.publication?.subtitle, [Validators.maxLength(200)]],
-      publisher: [this.publication?.publisher, [Validators.maxLength(100)]],
-      type: [this.publication?.type, [Validators.required, Validators.maxLength(100)]],
-      url: [this.publication?.url, [Validators.maxLength(2000)]],
+      title: [this.publication?.title, [Validators.required, Validators.maxLength(256)]],
+      subtitle: [this.publication?.subtitle, [Validators.maxLength(256)]],
+      publisher: [this.publication?.publisher, [Validators.maxLength(128)]],
+      type: [this.publication?.type, [Validators.required]],
+      typeName: [
+        {value: this.publication?.typeName, disabled: this.publication?.type !== PublicationType[PublicationType.Other]},
+        [Validators.required, Validators.maxLength(128)]
+      ],
+      url: [this.publication?.url, [Validators.maxLength(2048)]],
       date: [!!this.publication.date ? new Date(this.publication.date) : null]
     });
   }
@@ -58,5 +63,14 @@ export class PublicationEditDialogComponent implements OnInit {
     (this.operation === Operation.Add) ?
       this.publicationService.addPublication(publication).subscribe(() => this.dialogRef.close()) :
       this.publicationService.replacePublication(publication).subscribe(() => this.dialogRef.close());
+  }
+
+  updatePublicationTypeDisabled(publicationType: string): void {
+    if (publicationType === PublicationType[PublicationType.Other]) {
+      this.publicationForm.controls.typeName.enable();
+    } else {
+      this.publicationForm.patchValue({typeName: publicationType});
+      this.publicationForm.controls.typeName.disable();
+    }
   }
 }

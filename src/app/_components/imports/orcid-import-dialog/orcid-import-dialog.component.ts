@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild} from
 import {MatTableDataSource} from '@angular/material/table';
 import {SelectionModel} from '@angular/cdk/collections';
 import {GlobalService} from '../../../_services/global.service';
-import {Publication} from '../../../_models/publication.model';
+import {Publication} from '../../../_entities/publication.model';
 import * as _ from 'lodash';
 import {OrcidAccessTokenResponse} from '../../../_models/orcid-access-token-response.model';
 import {OrcidService} from '../../../_services/orcid.service';
@@ -10,6 +10,7 @@ import {PublicationService} from '../../../_services/publication.service';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {filter} from 'rxjs/operators';
 import {MatSort} from '@angular/material/sort';
+import {PublicationType} from '../../../_models/publication-type.enum';
 
 @Component({
   selector: 'app-orcid-import-dialog',
@@ -43,7 +44,7 @@ export class OrcidImportDialogComponent implements OnInit, OnDestroy {
     const title = _.get(work, 'work-summary[0].title.title.value')?.toString();
     const subtitle = _.get(work, 'work-summary[0].title.subtitle.value')?.toString();
     const publisher = _.get(work, 'work-summary[0].journal-title.value')?.toString();
-    const type = _.get(work, 'work-summary[0].type')?.toString();
+    const typeName = _.get(work, 'work-summary[0].type')?.toString();
     const url = _.get(work, 'work-summary[0].url.value')?.toString();
 
     const year = +_.get(work, 'work-summary[0].publication-date.year.value');
@@ -51,7 +52,7 @@ export class OrcidImportDialogComponent implements OnInit, OnDestroy {
     const day = +_.get(work, 'work-summary[0].publication-date.day.value');
     const date = !!year ? new Date(year, !!month ? month : 0, !!day ? day : 0).getTime() : undefined;
 
-    return {id: undefined, title, subtitle, publisher, type, url, date} as Publication;
+    return {id: undefined, title, subtitle, publisher, type: PublicationType[PublicationType.Other], typeName, url, date} as Publication;
   }
 
   private setDataSourceAttributes(): void {

@@ -34,7 +34,7 @@ export class CalendarEditDialogComponent implements OnInit {
     this.operation = !!this.teacher?.calendarUrl ? Operation.Save : Operation.Add;
 
     this.calendarForm = this.formBuilder.group({
-      calendarUrl: [this.teacher?.calendarUrl, [Validators.maxLength(2000)]]
+      calendarUrl: [this.teacher?.calendarUrl, [Validators.maxLength(2048)]]
     });
   }
 

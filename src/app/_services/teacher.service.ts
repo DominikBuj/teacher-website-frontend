@@ -30,7 +30,7 @@ export class TeacherService {
   private partialTeacherUpdate(teacher: Teacher): void {
     const newTeacher = this.teacher.value;
     for (const key of Object.keys(teacher)) {
-      if (!!teacher[key]) {
+      if (!!teacher[key] || teacher[key] === '') {
         newTeacher[key] = teacher[key];
       }
     }

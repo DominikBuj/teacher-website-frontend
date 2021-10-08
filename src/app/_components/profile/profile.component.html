@@ -3,17 +3,26 @@
        [ngClass]="{'teacher-picture-container-dark': global.isDarkMode,
        'teacher-picture-container-laptop': global.isScreenLarge,
        'teacher-picture-container-phone': global.isScreenMedium || global.isScreenSmall}">
-    <div class="teacher-picture-wrapper" (click)="!!teacher?.pictureUrl ? profilePicture.click() : null"
+    <div class="teacher-picture-wrapper"
          [ngClass]="{'has-image': !!teacher?.pictureUrl, 'teacher-picture-wrapper-editable': global.canEdit()}">
       <input #profilePicture [disabled]="!global.canEdit()" type="file"
              (change)="uploadProfilePicture(profilePicture.files)">
-      <img [src]="teacher?.pictureUrl" alt="zdjęcie profilowe">
-      <button mat-raised-button class="button" color="accent" (click)="profilePicture.click()"
-              [matTooltip]="global.isScreenSmall ? 'Wyślij' : null"
-              [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}">
-        <mat-icon>add_a_photo</mat-icon>
-        <span class="button-text">Wyślij</span>
-      </button>
+      <img *ngIf="!!teacher?.pictureUrl" [src]="teacher?.pictureUrl" alt="profile picture">
+      <div class="picture-edit-panel" [ngClass]="{'picture-edit-panel-dark': global.isDarkMode}">
+        <button mat-raised-button class="button" color="accent"
+                [ngStyle]="{'margin': !!teacher?.pictureUrl ? '8px 4px 8px 8px' : '8px 8px 8px 8px'}"
+                (click)="profilePicture.click()" [matTooltip]="global.isScreenSmall ? 'Upload' : null"
+                [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}">
+          <mat-icon>add_a_photo</mat-icon>
+          <span class="button-text">Upload</span>
+        </button>
+        <button *ngIf="!!teacher?.pictureUrl" mat-raised-button class="button" color="accent"
+                [matTooltip]="global.isScreenSmall ? 'Delete' : null" (click)="deleteProfilePicture()"
+                [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}" style="margin: 8px 8px 8px 4px;">
+          <mat-icon>{{global.operations.Delete}}</mat-icon>
+          <span class="button-text">Delete</span>
+        </button>
+      </div>
     </div>
   </div>
   <div class="teacher-info-container" [ngClass]="{'teacher-info-container-dark': global.isDarkMode,
@@ -24,16 +33,16 @@
         <span class="auto-spacer"></span>
         <a mat-raised-button color="accent" (click)="linkedInService.authorization = true"
            class="button" [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-           [matTooltip]="global.isScreenSmall ? 'Importuj LinkedIn' : null" [href]="linkedInAuthorizationUrl">
+           [matTooltip]="global.isScreenSmall ? 'Import data from LinkedIn' : null" [href]="linkedInAuthorizationUrl">
           <mat-icon>{{global.operations.Import}}</mat-icon>
-          <span class="button-text">Importuj LinkedIn</span>
+          <span class="button-text">Import data from LinkedIn</span>
         </a>
         <span class="auto-spacer"></span>
         <button mat-raised-button color="accent" type="submit" class="button"
                 [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-                [matTooltip]="global.isScreenSmall ? 'Zapisz' : null">
+                [matTooltip]="global.isScreenSmall ? 'Save' : null">
           <mat-icon>{{global.operations.Save}}</mat-icon>
-          <span class="button-text">Zapisz</span>
+          <span class="button-text">Save</span>
         </button>
         <span class="auto-spacer"></span>
       </div>
@@ -41,40 +50,40 @@
         <div class="input-container"
              [ngClass]="{'input-container-row': global.isScreenMedium || global.isScreenVeryLarge}">
           <mat-form-field appearance="fill" color="accent">
-            <mat-label>Imię</mat-label>
+            <mat-label>First name</mat-label>
             <input #firstName type="text" matInput formControlName="firstName">
-            <mat-hint align="end">{{firstName.value.length}} / 100</mat-hint>
+            <mat-hint align="end">{{firstName.value.length}} / 128</mat-hint>
             <mat-error *ngIf="functions.checkError(teacherProfileForm, 'firstName', 'maxlength')">
-              Imię może maksymalnie mieć długość <strong>100</strong> znaków
+              Please enter no more than <strong>128</strong> characters
             </mat-error>
           </mat-form-field>
           <span class="auto-spacer"></span>
           <mat-form-field appearance="fill" color="accent">
-            <mat-label>Nazwisko</mat-label>
+            <mat-label>Last name</mat-label>
             <input #lastName type="text" matInput formControlName="lastName">
-            <mat-hint align="end">{{lastName.value.length}} / 100</mat-hint>
+            <mat-hint align="end">{{lastName.value.length}} / 128</mat-hint>
             <mat-error *ngIf="functions.checkError(teacherProfileForm, 'lastName', 'maxlength')">
-              Nazwisko może maksymalnie mieć długość <strong>100</strong> znaków
+              Please enter no more than <strong>128</strong> characters
             </mat-error>
           </mat-form-field>
         </div>
         <div class="input-container"
              [ngClass]="{'input-container-row': global.isScreenMedium || global.isScreenVeryLarge}">
           <mat-form-field appearance="fill" color="accent">
-            <mat-label>Uczelnia</mat-label>
+            <mat-label>University</mat-label>
             <input #university type="text" matInput formControlName="university">
-            <mat-hint align="end">{{university.value.length}} / 100</mat-hint>
+            <mat-hint align="end">{{university.value.length}} / 128</mat-hint>
             <mat-error *ngIf="functions.checkError(teacherProfileForm, 'university', 'maxlength')">
-              Uczelnia może maksymalnie mieć długość <strong>100</strong> znaków
+              Please enter no more than <strong>128</strong> characters
             </mat-error>
           </mat-form-field>
           <span class="auto-spacer"></span>
           <mat-form-field appearance="fill" color="accent">
-            <mat-label>Przedmiot</mat-label>
+            <mat-label>Subject</mat-label>
             <input #subject type="text" matInput formControlName="subject">
-            <mat-hint align="end">{{subject.value.length}} / 100</mat-hint>
+            <mat-hint align="end">{{subject.value.length}} / 128</mat-hint>
             <mat-error *ngIf="functions.checkError(teacherProfileForm, 'subject', 'maxlength')">
-              Przedmiot może maksymalnie mieć długość <strong>100</strong> znaków
+              Please enter no more than <strong>128</strong> characters
             </mat-error>
           </mat-form-field>
         </div>
@@ -93,7 +102,7 @@
         </div>
         <div *ngIf="!!teacher?.about" class="teacher-info-content-container"
              [ngClass]="{'teacher-info-content-container-dark': global.isDarkMode}">
-          <span class="teacher-info-content-label">O mnie</span>
+          <span class="teacher-info-content-label">About me</span>
           <div class="teacher-info-content" [innerHTML]="teacher?.about"></div>
         </div>
         <span class="auto-spacer"></span>

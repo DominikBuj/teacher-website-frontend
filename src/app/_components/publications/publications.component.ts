@@ -2,7 +2,7 @@ import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChil
 import {Constants} from '../../constants';
 import {ActivatedRoute} from '@angular/router';
 import {OrcidService} from '../../_services/orcid.service';
-import {Publication} from '../../_models/publication.model';
+import {Publication} from '../../_entities/publication.model';
 import {PublicationService} from '../../_services/publication.service';
 import {FunctionsService} from '../../_services/functions.service';
 import {SettingsService} from '../../_services/settings.service';
@@ -31,7 +31,7 @@ export class PublicationsComponent implements OnInit, AfterViewInit, OnDestroy {
   paginator: MatPaginator = null;
   sort: MatSort = null;
   filterValue = '';
-  columns: string[] = ['title', 'subtitle', 'publisher', 'type', 'date'];
+  columns: string[] = ['title', 'subtitle', 'publisher', 'typeName', 'date'];
 
   private setDataSourceAttributes(): void {
     this.publicationsDataSource.paginator = this.paginator;
@@ -104,6 +104,7 @@ export class PublicationsComponent implements OnInit, AfterViewInit, OnDestroy {
         subtitle: publication.subtitle,
         publisher: publication.publisher,
         type: publication.type,
+        typeName: publication.typeName,
         url: publication.url,
         date: publication.date
       } as Publication

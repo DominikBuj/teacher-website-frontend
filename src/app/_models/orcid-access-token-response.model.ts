@@ -1,6 +1,6 @@
 /* tslint:disable:variable-name */
 
-export class OrcidAccessTokenResponse {
+export interface OrcidAccessTokenResponse {
   access_token: string;
   token_type: string;
   refresh_token: string;

@@ -2,7 +2,7 @@
      'component-container-tablet': global.isScreenMedium, 'component-container-phone': global.isScreenSmall}">
   <div *ngIf="!global.isScreenSmall" class="component-header"
        [ngClass]="{'component-header-tablet': !global.isScreenVeryLarge}">
-    <span>Publikacje</span>
+    <span>Publications</span>
   </div>
 
   <div class="component-content-container" [ngClass]="{'component-content-container-dark': global.isDarkMode,
@@ -14,16 +14,16 @@
       <span class="auto-spacer"></span>
       <a @easeInOutEditingButton mat-raised-button (click)="orcidService.authorization = true"
          color="accent" class="button" [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-         [matTooltip]="global.isScreenSmall ? 'Importuj ORCID' : null" [href]="orcidAuthorizationUrl">
+         [matTooltip]="global.isScreenSmall ? 'Import data from ORCID' : null" [href]="orcidAuthorizationUrl">
         <mat-icon>{{global.operations.Import}}</mat-icon>
-        <span class="button-text">Importuj ORCID</span>
+        <span class="button-text">Import data from ORCID</span>
       </a>
       <span class="auto-spacer"></span>
       <button @easeInOutEditingButton mat-raised-button color="accent" (click)="addPublication()" class="button"
               [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-              [matTooltip]="global.isScreenSmall ? 'Dodaj' : null">
+              [matTooltip]="global.isScreenSmall ? 'Add' : null">
         <mat-icon>{{global.operations.Add}}</mat-icon>
-        <span class="button-text">Dodaj</span>
+        <span class="button-text">Add</span>
       </button>
       <span class="auto-spacer"></span>
     </div>
@@ -32,30 +32,30 @@
       <table mat-table matSort multiTemplateDataRows class="entry-table" [dataSource]="publicationsDataSource">
 
         <ng-container matColumnDef="title">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Tytuł</th>
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Title</th>
         </ng-container>
 
         <ng-container matColumnDef="subtitle">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Podtytuł</th>
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Subtitle</th>
         </ng-container>
 
         <ng-container matColumnDef="publisher">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Publikacja</th>
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Publisher</th>
         </ng-container>
 
-        <ng-container matColumnDef="type">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Rodzaj</th>
+        <ng-container matColumnDef="typeName">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Type</th>
         </ng-container>
 
         <ng-container matColumnDef="date">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Data Publikacji</th>
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Date of publication</th>
         </ng-container>
 
         <ng-container matColumnDef="filter">
           <th mat-header-cell *matHeaderCellDef [colSpan]="columns.length" class="entry-table-cell no-border"
               [ngClass]="{'entry-table-cell-tablet': global.isScreenSmall || global.isScreenMedium}">
             <mat-form-field color="accent" appearance="outline" class="table-filter">
-              <mat-label>Szukaj</mat-label>
+              <mat-label>Search</mat-label>
               <input matInput (keyup)="applyFilter($event)">
             </mat-form-field>
           </th>
@@ -71,16 +71,18 @@
               </mat-card-header>
 
               <mat-card-content>
-                <span *ngIf="!!element.type" class="publication-parameter">Rodzaj: {{element.type}}</span>
+                <span *ngIf="!!element.typeName" class="publication-parameter">Type: {{element.typeName}}</span>
                 <div class="publication-parameter-container"
                      [ngClass]="{'publication-parameter-container-column': global.isScreenSmall || global.isScreenMedium}">
-                  <span *ngIf="!!element.publisher" class="publication-parameter">Wydawca: {{element.publisher}}</span>
+                  <span *ngIf="!!element.publisher"
+                        class="publication-parameter">Publisher: {{element.publisher}}</span>
                   <span *ngIf="!!element.publisher" class="auto-spacer-small"></span>
-                  <span *ngIf="!!element.date" class="publication-parameter">Data Publikacji: {{element.date | date:'fullDate'}}</span>
+                  <span *ngIf="!!element.date"
+                        class="publication-parameter">Date of publication: {{element.date | date:'fullDate'}}</span>
                   <span class="auto-spacer"></span>
                 </div>
                 <div *ngIf="!!element.url" class="publication-url-container">
-                  <span class="publication-url-label">Link:</span>
+                  <span class="publication-url-label">Url:</span>
                   <a mat-button class="publication-url" [ngClass]="{'publication-url-phone': global.isScreenSmall}"
                      [href]="element.url" target="_blank">{{element.url}}</a>
                 </div>
@@ -93,16 +95,16 @@
                 <span class="auto-spacer"></span>
                 <button @easeInOutEditingButton mat-raised-button color="accent"
                         class="button" [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-                        [matTooltip]="global.isScreenSmall ? 'Edytuj' : null" (click)="replacePublication(element)">
+                        [matTooltip]="global.isScreenSmall ? 'Edit' : null" (click)="replacePublication(element)">
                   <mat-icon>{{global.operations.Edit}}</mat-icon>
-                  <span class="button-text">Edytuj</span>
+                  <span class="button-text">Edit</span>
                 </button>
                 <span class="auto-spacer"></span>
                 <button @easeInOutEditingButton mat-raised-button color="accent"
                         class="button" [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-                        [matTooltip]="global.isScreenSmall ? 'Usuń' : null" (click)="deletePublication(element)">
+                        [matTooltip]="global.isScreenSmall ? 'Delete' : null" (click)="deletePublication(element)">
                   <mat-icon>{{global.operations.Delete}}</mat-icon>
-                  <span class="button-text">Usuń</span>
+                  <span class="button-text">Delete</span>
                 </button>
                 <span class="auto-spacer"></span>
               </mat-card-actions>
@@ -117,7 +119,7 @@
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell entry-table-cell" *ngIf="filterValue.length !== 0" [colSpan]="columns.length"
               [ngClass]="{'entry-table-cell-tablet': global.isScreenSmall || global.isScreenMedium}">
-            <span>Nie znaleziono "{{filterValue}}"</span>
+            <span>Cannot find "{{filterValue}}"</span>
           </td>
         </tr>
       </table>

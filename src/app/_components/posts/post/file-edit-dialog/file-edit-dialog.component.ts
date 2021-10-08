@@ -34,8 +34,8 @@ export class FileEditDialogComponent implements OnInit {
     this.operation = !!this.temporaryFile.url ? Operation.Save : Operation.Add;
 
     this.fileForm = this.formBuilder.group({
-      name: [this.temporaryFile?.name, [Validators.required, Validators.maxLength(100)]],
-      url: [this.temporaryFile?.url, [Validators.required, Validators.maxLength(2000)]]
+      name: [this.temporaryFile?.name, [Validators.required, Validators.maxLength(128)]],
+      url: [this.temporaryFile?.url, [Validators.required, Validators.maxLength(2048)]]
     });
   }
 

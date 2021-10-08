@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Dissertation} from '../_models/dissertation.model';
+import {Dissertation} from '../_entities/dissertation.model';
 import {FunctionsService} from './functions.service';
 import {LoggerService} from './logger.service';
 import {HttpClient} from '@angular/common/http';

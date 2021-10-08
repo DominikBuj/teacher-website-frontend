@@ -39,11 +39,11 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.teacherProfileForm = this.formBuilder.group({
-      firstName: [this.teacher?.firstName, [Validators.maxLength(100)]],
-      lastName: [this.teacher?.lastName, [Validators.maxLength(100)]],
-      university: [this.teacher?.university, [Validators.maxLength(100)]],
-      subject: [this.teacher?.subject, [Validators.maxLength(100)]],
-      about: [this.teacher?.about, [Validators.maxLength(4000)]]
+      firstName: [this.teacher?.firstName, [Validators.maxLength(128)]],
+      lastName: [this.teacher?.lastName, [Validators.maxLength(128)]],
+      university: [this.teacher?.university, [Validators.maxLength(128)]],
+      subject: [this.teacher?.subject, [Validators.maxLength(128)]],
+      about: [this.teacher?.about, [Validators.maxLength(4096)]]
     });
 
     this.teacherService.teacher.pipe(filter((teacher: Teacher) => !!teacher)).subscribe((teacher: Teacher) => {
@@ -84,5 +84,14 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         this.teacherService.updateTeacher(teacherPictureUpdate).subscribe();
       });
     }
+  }
+
+  deleteProfilePicture(): void {
+    const teacherPictureUpdate = this.functions.createModelUpdate<Teacher>(
+      ['pictureUrl'],
+      {pictureUrl: ''} as Teacher,
+      {pictureUrl: this.teacher?.pictureUrl} as Teacher
+    );
+    this.teacherService.updateTeacher(teacherPictureUpdate).subscribe();
   }
 }

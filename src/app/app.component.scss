@@ -92,8 +92,12 @@
   grid-area: app-content-container;
 }
 
-.app-footer-container{
+.app-footer-container {
   grid-area: app-footer-container;
+}
+
+.top-bottom-margin {
+  margin: 0 8px;
 }
 
 :host ::ng-deep .ckeditor {

@@ -2,7 +2,7 @@
      'component-container-tablet': global.isScreenMedium, 'component-container-phone': global.isScreenSmall}">
   <div *ngIf="!global.isScreenSmall" class="component-header"
        [ngClass]="{'component-header-tablet': !global.isScreenVeryLarge}">
-    <span>Aktualności</span>
+    <span>Posts</span>
   </div>
   <div class="component-content-container" [ngClass]="{'component-content-container-dark': global.isDarkMode,
        'component-content-container-tablet': global.isScreenMedium, 'component-content-container-phone': global.isScreenSmall}">
@@ -11,31 +11,31 @@
          [ngClass]="{'edit-buttons-container-dark': global.isDarkMode}">
       <a @easeInOutEditingButton mat-raised-button color="accent" [routerLink]="['/post']" class="button"
          [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-         [matTooltip]="global.isScreenSmall ? 'Dodaj' : null">
+         [matTooltip]="global.isScreenSmall ? 'Add' : null">
         <mat-icon>{{global.operations.Add}}</mat-icon>
-        <span class="button-text">Dodaj</span>
+        <span class="button-text">Add</span>
       </a>
     </div>
     <div class="entry-container">
       <table mat-table matSort multiTemplateDataRows class="entry-table" [dataSource]="postsDataSource">
 
         <ng-container matColumnDef="title">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Tytuł</th>
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Title</th>
         </ng-container>
 
         <ng-container matColumnDef="subtitle">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Podtytuł</th>
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Subtitle</th>
         </ng-container>
 
         <ng-container matColumnDef="date">
-          <th mat-header-cell mat-sort-header *matHeaderCellDef>Data</th>
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Date</th>
         </ng-container>
 
         <ng-container matColumnDef="filter">
           <th mat-header-cell *matHeaderCellDef [colSpan]="columns.length" class="entry-table-cell no-border"
               [ngClass]="{'entry-table-cell-tablet': global.isScreenSmall || global.isScreenMedium}">
             <mat-form-field color="accent" appearance="outline" class="table-filter">
-              <mat-label>Szukaj</mat-label>
+              <mat-label>Search</mat-label>
               <input matInput (keyup)="applyFilter($event)">
             </mat-form-field>
           </th>
@@ -61,16 +61,16 @@
                 <span class="auto-spacer"></span>
                 <button @easeInOutEditingButton mat-raised-button color="accent" [routerLink]="['/post', element.id]"
                         class="button" [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-                        [matTooltip]="global.isScreenSmall ? 'Edytuj' : null">
+                        [matTooltip]="global.isScreenSmall ? 'Edit' : null">
                   <mat-icon>{{global.operations.Edit}}</mat-icon>
-                  <span class="button-text">Edytuj</span>
+                  <span class="button-text">Edit</span>
                 </button>
                 <span class="auto-spacer"></span>
                 <button @easeInOutEditingButton mat-raised-button color="accent" (click)="deletePost(element)"
                         class="button" [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-                        [matTooltip]="global.isScreenSmall ? 'Usuń' : null">
+                        [matTooltip]="global.isScreenSmall ? 'Delete' : null">
                   <mat-icon>{{global.operations.Delete}}</mat-icon>
-                  <span class="button-text">Usuń</span>
+                  <span class="button-text">Delete</span>
                 </button>
                 <span class="auto-spacer"></span>
               </mat-card-actions>
@@ -85,7 +85,7 @@
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell entry-table-cell" *ngIf="filterValue.length !== 0" [colSpan]="columns.length"
               [ngClass]="{'entry-table-cell-tablet': global.isScreenSmall || global.isScreenMedium}">
-            <span>Nie znaleziono "{{filterValue}}"</span>
+            <span>Cannot find "{{filterValue}}"</span>
           </td>
         </tr>
       </table>

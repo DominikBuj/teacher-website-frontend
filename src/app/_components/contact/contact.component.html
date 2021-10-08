@@ -2,7 +2,7 @@
      'component-container-tablet': global.isScreenMedium, 'component-container-phone': global.isScreenSmall}">
   <div *ngIf="!global.isScreenSmall" class="component-header"
        [ngClass]="{'component-header-tablet': !global.isScreenVeryLarge}">
-    <span>Kontakt</span>
+    <span>Contact</span>
   </div>
   <div class="component-content-container contact-container"
        [ngClass]="{'component-content-container-dark': global.isDarkMode,
@@ -15,31 +15,30 @@
       <div class="edit-buttons-container" [ngClass]="{'edit-buttons-container-dark': global.isDarkMode}">
         <button mat-raised-button color="accent" type="submit" class="button"
                 [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-                [matTooltip]="global.isScreenSmall ? 'Zapisz' : null">
+                [matTooltip]="global.isScreenSmall ? 'Save' : null">
           <mat-icon>{{global.operations.Save}}</mat-icon>
-          <span class="button-text">Zapisz</span>
+          <span class="button-text">Save</span>
         </button>
       </div>
-      <div class="contact-info-middle-container" style="ma"
+      <div class="contact-info-middle-container"
            [ngClass]="{'contact-info-middle-container-phone': global.isScreenMedium || global.isScreenSmall}">
         <mat-form-field appearance="fill" color="accent">
-          <mat-label>Adres Email</mat-label>
+          <mat-label>Email address</mat-label>
           <input #emailAddress matInput type="email" formControlName="emailAddress">
-          <mat-hint align="end">{{emailAddress.value.length}} / 400</mat-hint>
+          <mat-hint align="end">{{emailAddress.value.length}} / 256</mat-hint>
           <mat-error *ngIf="functions.checkError(teacherContactForm, 'emailAddress', 'maxlength')">
-            Adres email może maksymalnie mieć długość <strong>400</strong> znaków
+            Please enter no more than <strong>256</strong> characters
           </mat-error>
           <mat-error *ngIf="functions.checkError(teacherContactForm, 'emailAddress', 'email')">
-            Adres email musi być <strong>poprawny</strong>
+            The given email address is <strong>incorrect</strong>
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill" color="accent">
-          <mat-label>Telefon</mat-label>
-          <span matPrefix>+48 &nbsp;</span>
+          <mat-label>Telephone number</mat-label>
           <input #phoneNumber matInput type="tel" formControlName="phoneNumber">
           <mat-hint align="end">{{phoneNumber.value.length}} / 16</mat-hint>
           <mat-error *ngIf="functions.checkError(teacherContactForm, 'phoneNumber', 'maxlength')">
-            Number telefonu może maksymalnie mieć długość <strong>16</strong> cyfr
+            The given telephone number is <strong>incorrect</strong>
           </mat-error>
         </mat-form-field>
       </div>
@@ -49,12 +48,12 @@
            [ngClass]="{'contact-info-container-dark': global.isDarkMode}">
         <div class="contact-info-middle-container"
              [ngClass]="{'contact-info-middle-container-phone': global.isScreenMedium || global.isScreenSmall}">
-          <div class="contact-info-entry-container">
-            <span class="contact-info-entry-label">Adres Email</span>
+          <div *ngIf="!!teacher?.emailAddress" class="contact-info-entry-container">
+            <span class="contact-info-entry-label">Email address</span>
             <span class="contact-info-entry">{{teacher?.emailAddress}}</span>
           </div>
-          <div class="contact-info-entry-container">
-            <span class="contact-info-entry-label">Numer Telefonu</span>
+          <div *ngIf="!!teacher?.phoneNumber" class="contact-info-entry-container">
+            <span class="contact-info-entry-label">Telephone number</span>
             <span class="contact-info-entry">{{teacher?.phoneNumber}}</span>
           </div>
         </div>
@@ -67,15 +66,15 @@
       <iframe [src]="calendarUrlSafe"></iframe>
       <button mat-raised-button *ngIf="global.canEdit()" color="accent" (click)="openCalendarEditDialog()"
               class="button" [ngClass]="{'button-without-text mat-mini-fab': global.isScreenSmall}"
-              [matTooltip]="global.isScreenSmall ? calendarExists ? 'Edytuj' : 'Dodaj kalendarz' : null">
+              [matTooltip]="global.isScreenSmall ? calendarExists ? 'Edit' : 'Add calendar' : null">
         <ng-container *ngIf="calendarExists; else noCalendar">
           <mat-icon>{{global.operations.Edit}}</mat-icon>
-          <span class="button-text">Edytuj</span>
+          <span class="button-text">Edit</span>
         </ng-container>
         <ng-template #noCalendar>
           <ng-container>
             <mat-icon>{{global.operations.Add}}</mat-icon>
-            <span class="button-text">Dodaj kalendarz</span>
+            <span class="button-text">Add calendar</span>
           </ng-container>
         </ng-template>
       </button>
