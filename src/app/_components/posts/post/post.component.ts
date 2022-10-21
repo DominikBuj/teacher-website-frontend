@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {GlobalService} from '../../../_services/global.service';
-import {Post} from '../../../_entities/post.model';
 import {PostService} from '../../../_services/post.service';
 import {Operation} from '../../../_models/operation.enum';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -13,6 +12,7 @@ import {filter} from 'rxjs/operators';
 import {FilesService} from '../../../_services/files.service';
 import {FileSaveResponse} from '../../../_models/file-save-response.model';
 import {SavedFile} from '../../../_models/saved-file.model';
+import {Post} from '../../../_entities/post.model';
 
 @Component({
   selector: 'app-post',
