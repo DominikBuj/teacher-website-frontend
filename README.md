@@ -1,4 +1,4 @@
-# TeacherWebsiteFrontEnd
+# TeacherWebsiteFrontend
 
 Website for an academic teacher, which enables the owner to edit its contents.
 Frontend (Angular) sends requests to the backend and presents the data on a locally hosted website.
